@@ -1,77 +1,147 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using YogaStudio.API.DTOs.LessonDtos;
 using YogaStudio.Data;
 using YogaStudio.Entity.Entities;
 
 namespace YogaStudio.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class LessonController : ControllerBase
     {
-        private readonly AppDbContext _appDbContext;
-        public LessonController(AppDbContext appDbContext)
+        private readonly AppDbContext _context;
+
+        public LessonController(AppDbContext context)
         {
-            _appDbContext = appDbContext;
+            _context = context;
         }
+
         [HttpGet]
         public IActionResult GetLessons()
         {
-            var values=_appDbContext.Lessons.ToList();
+            var values = _context.Lessons
+                .Include(x => x.Trainer)
+                .Select(x => new
+                {
+                    x.LessonId,
+                    x.Name,
+                    x.Date,
+                    x.Capacity,
+                    x.TrainerId,
+                    TrainerName = x.Trainer != null ? x.Trainer.Name : null,
+                    TrainerTitle = x.Trainer != null ? x.Trainer.Title : null
+                })
+                .ToList();
+
             return Ok(values);
         }
+
         [HttpGet("{id}")]
-        public IActionResult GetLessons(int id)
+        public IActionResult GetLessonById(int id)
         {
-            var value = _appDbContext.Lessons.FirstOrDefault(x => x.LessonId == id);
+            var value = _context.Lessons
+                .Include(x => x.Trainer)
+                .Where(x => x.LessonId == id)
+                .Select(x => new
+                {
+                    x.LessonId,
+                    x.Name,
+                    x.Date,
+                    x.Capacity,
+                    x.TrainerId,
+                    TrainerName = x.Trainer != null ? x.Trainer.Name : null,
+                    TrainerTitle = x.Trainer != null ? x.Trainer.Title : null
+                })
+                .FirstOrDefault();
+
             if (value == null)
             {
-                return NotFound("Ders Bulunamadı");
+                return NotFound("Ders bulunamadı");
             }
-            return Ok("value");
 
+            return Ok(value);
         }
+
         [HttpPost]
-        public IActionResult AddLesson(Lesson lesson)
+        public IActionResult AddLesson(CreateLessonDto dto)
         {
-            _appDbContext.Lessons.Add(lesson);
-            _appDbContext.SaveChanges();
-            return Ok("Ders Eklendi");    
+            if (string.IsNullOrWhiteSpace(dto.Name))
+            {
+                return BadRequest("Ders adı boş olamaz");
+            }
+
+            if (dto.Capacity <= 0)
+            {
+                return BadRequest("Kapasite 0'dan büyük olmalı");
+            }
+
+            var trainerExists = _context.Trainers.Any(x => x.TrainerId == dto.TrainerId);
+
+            if (!trainerExists)
+            {
+                return NotFound("Eğitmen bulunamadı");
+            }
+
+            var lesson = new Lesson
+            {
+                Name = dto.Name,
+                TrainerId = dto.TrainerId,
+                Date = dto.Date,
+                Capacity = dto.Capacity
+            };
+
+            _context.Lessons.Add(lesson);
+            _context.SaveChanges();
+
+            return Ok(new
+            {
+                message = "Ders eklendi",
+                lessonId = lesson.LessonId
+            });
         }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteLesson(int id)
         {
-            var value = _appDbContext.Lessons.FirstOrDefault(x => x.LessonId == id);
+            var value = _context.Lessons.FirstOrDefault(x => x.LessonId == id);
 
             if (value == null)
             {
                 return NotFound("Ders bulunamadı");
             }
 
-            _appDbContext.Lessons.Remove(value);
-            _appDbContext.SaveChanges();
+            _context.Lessons.Remove(value);
+            _context.SaveChanges();
+
             return Ok("Ders silindi");
         }
 
-        [HttpPut]
-        public IActionResult UpdateLesson(Lesson lesson)
+        [HttpPut("{id}")]
+        public IActionResult UpdateLesson(int id, CreateLessonDto dto)
         {
-            var value = _appDbContext.Lessons.FirstOrDefault(x => x.LessonId == lesson.LessonId);
+            var value = _context.Lessons.FirstOrDefault(x => x.LessonId == id);
 
             if (value == null)
             {
                 return NotFound("Ders bulunamadı");
             }
 
-            value.Name = lesson.Name;
-            value.Date = lesson.Date;
-            value.Capacity = lesson.Capacity;
-            value.TrainerId = lesson.TrainerId;
+            var trainerExists = _context.Trainers.Any(x => x.TrainerId == dto.TrainerId);
 
-            _appDbContext.SaveChanges();
+            if (!trainerExists)
+            {
+                return NotFound("Eğitmen bulunamadı");
+            }
+
+            value.Name = dto.Name;
+            value.Date = dto.Date;
+            value.Capacity = dto.Capacity;
+            value.TrainerId = dto.TrainerId;
+
+            _context.SaveChanges();
+
             return Ok("Ders güncellendi");
         }
     }
-
 }

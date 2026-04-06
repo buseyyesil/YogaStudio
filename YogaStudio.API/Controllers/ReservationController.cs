@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using YogaStudio.API.DTOs.ReservationDtos;
 using YogaStudio.Data;
 using YogaStudio.Entity.Entities;
 
@@ -23,6 +23,14 @@ namespace YogaStudio.API.Controllers
             var values = _appDbContext.Reservations
                 .Include(x => x.User)
                 .Include(x => x.Lesson)
+                .Select(x => new
+                {
+                    x.ReservationId,
+                    x.UserId,
+                    UserName = x.User != null ? x.User.Username : null,
+                    x.LessonId,
+                    LessonName = x.Lesson != null ? x.Lesson.Name : null
+                })
                 .ToList();
 
             return Ok(values);
@@ -34,7 +42,16 @@ namespace YogaStudio.API.Controllers
             var value = _appDbContext.Reservations
                 .Include(x => x.User)
                 .Include(x => x.Lesson)
-                .FirstOrDefault(x => x.ReservationId == id);
+                .Where(x => x.ReservationId == id)
+                .Select(x => new
+                {
+                    x.ReservationId,
+                    x.UserId,
+                    UserName = x.User != null ? x.User.Username : null,
+                    x.LessonId,
+                    LessonName = x.Lesson != null ? x.Lesson.Name : null
+                })
+                .FirstOrDefault();
 
             if (value == null)
             {
@@ -45,22 +62,35 @@ namespace YogaStudio.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddReservation(Reservation reservation)
+        public IActionResult AddReservation(CreateReservationDto dto)
         {
+            if (dto.UserId <= 0 || dto.LessonId <= 0)
+            {
+                return BadRequest("Geçersiz kullanıcı veya ders bilgisi");
+            }
+
             var lesson = _appDbContext.Lessons
                 .Include(x => x.Reservations)
-                .FirstOrDefault(x => x.LessonId == reservation.LessonId);
+                .FirstOrDefault(x => x.LessonId == dto.LessonId);
 
             if (lesson == null)
             {
                 return NotFound("Ders bulunamadı");
             }
 
-            var user = _appDbContext.Users.FirstOrDefault(x => x.UserId == reservation.UserId);
+            var user = _appDbContext.Users.FirstOrDefault(x => x.UserId == dto.UserId);
 
             if (user == null)
             {
                 return NotFound("Kullanıcı bulunamadı");
+            }
+
+            var existingReservation = _appDbContext.Reservations
+                .FirstOrDefault(x => x.UserId == dto.UserId && x.LessonId == dto.LessonId);
+
+            if (existingReservation != null)
+            {
+                return BadRequest("Bu kullanıcı bu derse zaten kayıtlı");
             }
 
             if (lesson.Reservations.Count >= lesson.Capacity)
@@ -68,10 +98,20 @@ namespace YogaStudio.API.Controllers
                 return BadRequest("Kontenjan dolu");
             }
 
+            var reservation = new Reservation
+            {
+                UserId = dto.UserId,
+                LessonId = dto.LessonId
+            };
+
             _appDbContext.Reservations.Add(reservation);
             _appDbContext.SaveChanges();
 
-            return Ok("Rezervasyon başarılı");
+            return Ok(new
+            {
+                message = "Rezervasyon başarılı",
+                reservationId = reservation.ReservationId
+            });
         }
 
         [HttpDelete("{id}")]
