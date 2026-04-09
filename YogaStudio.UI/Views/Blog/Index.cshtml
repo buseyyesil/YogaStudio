@@ -1,4 +1,7 @@
-﻿@{
+﻿@using YogaStudio.UI.Models
+@model List<BlogViewModel>
+
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Blog";
 }
@@ -10,7 +13,7 @@
             <div class="col-md-9 ftco-animate text-center">
                 <h1 class="mb-3 bread">Our Blog</h1>
                 <p class="breadcrumbs">
-                    <span class="mr-2"><a href="/Home/Index">Home</a></span>
+                    <span class="mr-2"><a href="/Default/Index">Home</a></span>
                     <span>Blog</span>
                 </p>
             </div>
@@ -21,102 +24,36 @@
 <section class="ftco-section bg-light">
     <div class="container">
         <div class="row d-flex">
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry justify-content-end">
-                    <a href="#" class="block-20" style="background-image: url('/yogalax-master/images/image_1.jpg');"></a>
-                    <div class="text p-4 float-right d-block">
-                        <div class="d-flex align-items-center pt-2 mb-4">
-                            <div class="one"><span class="day">31</span></div>
-                            <div class="two">
-                                <span class="yr">2018</span>
-                                <span class="mos">December</span>
+            @if (Model == null || !Model.Any())
+            {
+                <div class="col-12 text-center">
+                    <p>Henüz blog yazısı eklenmemiş.</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var blog in Model)
+                {
+                    <div class="col-md-4 d-flex ftco-animate">
+                        <div class="blog-entry justify-content-end">
+                            <a href="#" class="block-20" style="background-image: url('@blog.ImageUrl');"></a>
+                            <div class="text p-4 float-right d-block">
+                                <div class="d-flex align-items-center pt-2 mb-4">
+                                    <div class="one">
+                                        <span class="day">@blog.CreatedAt.Day</span>
+                                    </div>
+                                    <div class="two">
+                                        <span class="yr">@blog.CreatedAt.Year</span>
+                                        <span class="mos">@blog.CreatedAt.ToString("MMMM")</span>
+                                    </div>
+                                </div>
+                                <h3 class="heading mt-2"><a href="#">@blog.Title</a></h3>
+                                <p>@blog.Content</p>
                             </div>
                         </div>
-                        <h3 class="heading mt-2"><a href="#">Young Women Doing Yoga</a></h3>
-                        <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry justify-content-end">
-                    <a href="#" class="block-20" style="background-image: url('/yogalax-master/images/image_2.jpg');"></a>
-                    <div class="text p-4 float-right d-block">
-                        <div class="d-flex align-items-center pt-2 mb-4">
-                            <div class="one"><span class="day">27</span></div>
-                            <div class="two">
-                                <span class="yr">2018</span>
-                                <span class="mos">December</span>
-                            </div>
-                        </div>
-                        <h3 class="heading mt-2"><a href="#">Young Women Doing Yoga</a></h3>
-                        <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry">
-                    <a href="#" class="block-20" style="background-image: url('/yogalax-master/images/image_3.jpg');"></a>
-                    <div class="text p-4 float-right d-block">
-                        <div class="d-flex align-items-center pt-2 mb-4">
-                            <div class="one"><span class="day">25</span></div>
-                            <div class="two">
-                                <span class="yr">2018</span>
-                                <span class="mos">December</span>
-                            </div>
-                        </div>
-                        <h3 class="heading mt-2"><a href="#">Young Women Doing Yoga</a></h3>
-                        <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry justify-content-end">
-                    <a href="#" class="block-20" style="background-image: url('/yogalax-master/images/image_4.jpg');"></a>
-                    <div class="text p-4 float-right d-block">
-                        <div class="d-flex align-items-center pt-2 mb-4">
-                            <div class="one"><span class="day">31</span></div>
-                            <div class="two">
-                                <span class="yr">2018</span>
-                                <span class="mos">December</span>
-                            </div>
-                        </div>
-                        <h3 class="heading mt-2"><a href="#">Young Women Doing Yoga</a></h3>
-                        <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry justify-content-end">
-                    <a href="#" class="block-20" style="background-image: url('/yogalax-master/images/image_5.jpg');"></a>
-                    <div class="text p-4 float-right d-block">
-                        <div class="d-flex align-items-center pt-2 mb-4">
-                            <div class="one"><span class="day">27</span></div>
-                            <div class="two">
-                                <span class="yr">2018</span>
-                                <span class="mos">December</span>
-                            </div>
-                        </div>
-                        <h3 class="heading mt-2"><a href="#">Young Women Doing Yoga</a></h3>
-                        <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry">
-                    <a href="#" class="block-20" style="background-image: url('/yogalax-master/images/image_6.jpg');"></a>
-                    <div class="text p-4 float-right d-block">
-                        <div class="d-flex align-items-center pt-2 mb-4">
-                            <div class="one"><span class="day">25</span></div>
-                            <div class="two">
-                                <span class="yr">2018</span>
-                                <span class="mos">December</span>
-                            </div>
-                        </div>
-                        <h3 class="heading mt-2"><a href="#">Young Women Doing Yoga</a></h3>
-                        <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                    </div>
-                </div>
-            </div>
+                }
+            }
         </div>
         <div class="row mt-5">
             <div class="col text-center">
@@ -124,10 +61,6 @@
                     <ul>
                         <li><a href="#">&lt;</a></li>
                         <li class="active"><span>1</span></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
                         <li><a href="#">&gt;</a></li>
                     </ul>
                 </div>

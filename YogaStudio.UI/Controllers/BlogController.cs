@@ -1,12 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using YogaStudio.UI.Services;
 
 namespace YogaStudio.UI.Controllers
 {
     public class BlogController : Controller
     {
-        public IActionResult Index()
+        private readonly ApiService _apiService;
+
+        public BlogController(ApiService apiService)
         {
-            return View();
+            _apiService = apiService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var blogs = await _apiService.GetBlogsAsync();
+            return View(blogs);
         }
     }
 }

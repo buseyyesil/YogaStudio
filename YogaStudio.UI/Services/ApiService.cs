@@ -78,7 +78,25 @@ namespace YogaStudio.UI.Services
                    ?? new List<ReservationViewModel>();
         }
 
+        public async Task<List<BlogViewModel>> GetBlogsAsync()
+        {
+            var response = await _httpClient.GetAsync("api/Blog");
+            if (!response.IsSuccessStatusCode) return new List<BlogViewModel>();
 
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<BlogViewModel>>(json, JsonOptions())
+                   ?? new List<BlogViewModel>();
+        }
+
+        public async Task<List<TestimonyViewModel>> GetTestimoniesAsync()
+        {
+            var response = await _httpClient.GetAsync("api/Testimony");
+            if (!response.IsSuccessStatusCode) return new List<TestimonyViewModel>();
+
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<TestimonyViewModel>>(json, JsonOptions())
+                   ?? new List<TestimonyViewModel>();
+        }
         public async Task<(bool Success, string Message, int UserId, string Username, string Role)> LoginAsync(LoginViewModel model)
         {
             var json = JsonSerializer.Serialize(new { model.Email, model.Password });

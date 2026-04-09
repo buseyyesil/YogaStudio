@@ -17,7 +17,14 @@
         </div>
     </div>
 </section>
-
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success text-center">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger text-center">@TempData["Error"]</div>
+}
 <section class="ftco-section contact-section">
     <div class="container">
         <div class="row block-9">

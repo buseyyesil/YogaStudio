@@ -1,6 +1,32 @@
-﻿@{
+﻿@using YogaStudio.UI.Models
+@model Dictionary<DayOfWeek, List<LessonViewModel>>
+
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Schedule";
+
+    var days = new[]
+    {
+        DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday,
+        DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday
+    };
+
+    var dayNames = new Dictionary<DayOfWeek, string>
+    {
+        { DayOfWeek.Monday, "Monday" },
+        { DayOfWeek.Tuesday, "Tuesday" },
+        { DayOfWeek.Wednesday, "Wednesday" },
+        { DayOfWeek.Thursday, "Thursday" },
+        { DayOfWeek.Friday, "Friday" },
+        { DayOfWeek.Saturday, "Saturday" },
+        { DayOfWeek.Sunday, "Sunday" }
+    };
+
+    var colorClasses = new[] { "color-1", "color-2", "color-3", "color-4", "color-5" };
+
+    var allTimes = Model != null
+        ? Model.Values.SelectMany(x => x).Select(x => x.Date.ToString("HH:mm")).Distinct().OrderBy(x => x).ToList()
+        : new List<string>();
 }
 
 <section class="hero-wrap js-fullheight" style="background-image: url('/yogalax-master/images/bg_3.jpg');">
@@ -20,161 +46,89 @@
 
 <section class="ftco-section">
     <div class="container">
-        <div class="row">
-            <div class="col-md-12 ftco-animate">
-                <div class="sched-list">
-                    <table class="table">
-                        <thead class="thead-primary">
-                            <tr class="text-center">
-                                <th>&nbsp;</th>
-                                <th>Monday</th>
-                                <th>Tuesday</th>
-                                <th>Wednesday</th>
-                                <th>Thursday</th>
-                                <th>Friday</th>
-                                <th>Saturday</th>
-                                <th>Sunday</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="text-center">
-                                <td class="color">
-                                    <p class="time">9:00am</p>
-                                </td>
-                                <td class="color-1">
-                                    <h3><a href="#">Morning Flow</a></h3>
-                                    <span class="at">Advanced Sequence</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-1">
-                                    <h3><a href="#">Cardio Program</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-2">
-                                    <h3><a href="#">Body Building</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-3">
-                                    <h3><a href="#">Bicep Pro</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-1">
-                                    <h3><a href="#">Leg Strengthening</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-4">
-                                    <h3><a href="#">Muscle Relax</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-5">
-                                    <h3><a href="#">Yoga Program</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                            </tr>
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
 
-                            <tr class="text-center">
-                                <td class="color">
-                                    <p class="time">9:00am</p>
-                                </td>
-                                <td class="color-1"></td>
-                                <td class="color-2">
-                                    <h3><a href="#">Cardio Program</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-3">
-                                    <h3><a href="#">Body Building</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-3"></td>
-                                <td class="color-1">
-                                    <h3><a href="#">Leg Strengthening</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-5">
-                                    <h3><a href="#">Muscle Relax</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-4">
-                                    <h3><a href="#">Yoga Program</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                            </tr>
+        @if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info text-center">Henüz ders programı eklenmemiş.</div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-md-12 ftco-animate">
+                    <div class="sched-list">
+                        <table class="table">
+                            <thead class="thead-primary">
+                                <tr class="text-center">
+                                    <th>&nbsp;</th>
+                                    @foreach (var day in days)
+                                    {
+                                        <th>@dayNames[day]</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int colorIndex = 0;
+                                }
+                                @foreach (var time in allTimes)
+                                {
+                                    <tr class="text-center">
+                                        <td class="color">
+                                            <p class="time">@time</p>
+                                        </td>
+                                        @foreach (var day in days)
+                                        {
+                                            var lesson = Model.ContainsKey(day)
+                                            ? Model[day].FirstOrDefault(x => x.Date.ToString("HH:mm") == time)
+                                            : null;
 
-                            <tr class="text-center">
-                                <td class="color">
-                                    <p class="time">9:00am</p>
-                                </td>
-                                <td class="color-3">
-                                    <h3><a href="#">Morning Flow</a></h3>
-                                    <span class="at">Advanced Sequence</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-1">
-                                    <h3><a href="#">Cardio Program</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-2">
-                                    <h3><a href="#">Body Building</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-1">
-                                    <h3><a href="#">Bicep Pro</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-1">
-                                    <h3><a href="#">Leg Strengthening</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-4">
-                                    <h3><a href="#">Muscle Relax</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                                <td class="color-5">
-                                    <h3><a href="#">Yoga Program</a></h3>
-                                    <span class="at">Weight Loss</span>
-                                    <p class="time">9:00am - 10:30am</p>
-                                    <span class="trainer">Maricar Collins</span>
-                                </td>
-                            </tr>
+                                            var colorClass = colorClasses[colorIndex % colorClasses.Length];
+                                            colorIndex++;
 
-                        </tbody>
-                    </table>
+                                            if (lesson != null)
+                                            {
+                                                <td class="@colorClass">
+                                                    <h3>@lesson.Name</h3>
+                                                    <span class="at">@lesson.TrainerTitle</span>
+                                                    <p class="time">@lesson.Date.ToString("HH:mm") - @lesson.Date.AddMinutes(90).ToString("HH:mm")</p>
+                                                    <span class="trainer">@lesson.TrainerName</span>
+                                                    <br /><small>Kapasite: @lesson.Capacity</small>
+                                                    @if (Context.Session.GetInt32("UserId") != null)
+                                                    {
+                                                        <form asp-controller="Schedule" asp-action="Reserve" method="post" class="mt-2">
+                                                            <input type="hidden" name="lessonId" value="@lesson.LessonId" />
+                                                            <button type="submit" class="btn btn-sm btn-primary">Rezervasyon Yap</button>
+                                                        </form>
+                                                    }
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td class="@colorClass"></td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
+
+        @if (Context.Session.GetInt32("UserId") == null)
+        {
+            <div class="text-center mt-3">
+                <p>Rezervasyon yapmak için <a href="/Auth/Login">giriş yapın</a>.</p>
+            </div>
+        }
     </div>
 </section>

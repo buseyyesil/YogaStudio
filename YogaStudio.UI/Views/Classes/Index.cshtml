@@ -1,0 +1,61 @@
+﻿@using YogaStudio.UI.Models
+@model List<LessonViewModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Classes";
+    var programImages = new[] { "program-1.jpg","program-2.jpg","program-3.jpg","program-4.jpg","program-5.jpg","program-6.jpg" };
+}
+
+<section class="hero-wrap js-fullheight" style="background-image: url('/yogalax-master/images/bg_3.jpg');">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h1 class="mb-3 bread">Yoga Classes</h1>
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="/Home/Index">Home</a></span>
+                    <span>Classes</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center mb-5 pb-3">
+            <div class="col-md-12 heading-section ftco-animate text-center">
+                <h3 class="subheading">Yoga Classes</h3>
+                <h2 class="mb-1">Choose Your Level &amp; Focus</h2>
+            </div>
+        </div>
+        <div class="row no-gutters">
+            @if (Model == null || !Model.Any())
+            {
+                <div class="col-12 text-center"><p>Henüz ders eklenmemiş.</p></div>
+            }
+            else
+            {
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var lesson = Model[i];
+                    var img = programImages[i % programImages.Length];
+                    <div class="col-md-6 col-lg-4">
+                        <div class="package-program ftco-animate">
+                            <a href="#" class="img d-flex justify-content-center align-items-center"
+                               style="background-image: url('/yogalax-master/images/@img');">
+                                <div class="text p-5 text-center">
+                                    <h3>@lesson.Name</h3>
+                                    <p>@lesson.TrainerName - @lesson.TrainerTitle</p>
+                                    <p>@lesson.Date.ToString("dd MMM yyyy HH:mm")</p>
+                                    <p>Kapasite: @lesson.Capacity</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>

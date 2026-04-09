@@ -37,12 +37,24 @@
 
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a href="/Home/Index" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="/Home/Classes" class="nav-link">Classes</a></li>
-                    <li class="nav-item"><a href="/Home/Schedule" class="nav-link">Schedule</a></li>
-                    <li class="nav-item"><a href="/Home/About" class="nav-link">About</a></li>
-                    <li class="nav-item"><a href="/Home/Blog" class="nav-link">Blog</a></li>
-                    <li class="nav-item"><a href="/Home/Contact" class="nav-link">Contact</a></li>
+                    <li class="nav-item"><a href="/Default/Index" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="/Classes/Index" class="nav-link">Classes</a></li>
+                    <li class="nav-item"><a href="/Schedule/Index" class="nav-link">Schedule</a></li>
+                    <li class="nav-item"><a href="/About/Index" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="/Blog/Index" class="nav-link">Blog</a></li>
+                    <li class="nav-item"><a href="/Contact/Index" class="nav-link">Contact</a></li>
+                    @if (Context.Session.GetString("Username") != null)
+                    {
+                        <li class="nav-item">
+                            <span class="nav-link text-warning">Merhaba, @Context.Session.GetString("Username")</span>
+                        </li>
+                        <li class="nav-item"><a href="/Auth/Logout" class="nav-link">Çıkış</a></li>
+                    }
+                    else
+                    {
+                        <li class="nav-item"><a href="/Auth/Login" class="nav-link">Giriş</a></li>
+                        <li class="nav-item"><a href="/Auth/Register" class="nav-link">Kayıt Ol</a></li>
+                    }
                 </ul>
             </div>
         </div>
@@ -59,13 +71,11 @@
                         <h1 class="logo">YogaStudio</h1>
                     </div>
                 </div>
-
                 <div class="col-lg col-md-6 mb-5 mb-md-5 ftco-animate">
                     <div class="ftco-footer-widget mb-4">
                         <h2 class="location">Kocaeli, Türkiye</h2>
                     </div>
                 </div>
-
                 <div class="col-lg-3 col-md-6 mb-5 mb-md-5">
                     <div class="ftco-footer-widget mb-4">
                         <ul class="ftco-footer-social list-unstyled float-md-left float-lft">
@@ -76,7 +86,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md-12 text-center">
                     <p>
