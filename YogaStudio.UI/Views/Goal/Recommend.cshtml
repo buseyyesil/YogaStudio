@@ -1,0 +1,72 @@
+﻿@using YogaStudio.UI.Models
+@model List<LessonViewModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Önerilen Program";
+    var programImages = new[] { "program-1.jpg", "program-2.jpg", "program-3.jpg", "program-4.jpg", "program-5.jpg", "program-6.jpg" };
+}
+
+<section class="hero-wrap js-fullheight" style="background-image: url('/yogalax-master/images/bg_3.jpg');">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h1 class="mb-3 bread">@ViewBag.Goal İçin Öneriler</h1>
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="/Default/Index">Home</a></span>
+                    <span class="mr-2"><a href="/Goal/Index">Hedef</a></span>
+                    <span>@ViewBag.Goal</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-8 text-center">
+                <h2 class="mb-3">@ViewBag.Goal Hedefi İçin Önerilen Dersler</h2>
+                <p class="text-muted">Size özel seçilmiş yoga programları aşağıda listelenmiştir.</p>
+                <a href="/Goal/Index" class="btn btn-outline-primary mr-2">
+                    <i class="ion-ios-arrow-back"></i> Farklı Hedef Seç
+                </a>
+                <a href="/Schedule/Index" class="btn btn-primary">
+                    Tüm Program →
+                </a>
+            </div>
+        </div>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info text-center">
+                Bu hedef için henüz ders eklenmemiş.
+                <a href="/Schedule/Index" class="font-weight-bold">Tüm derslere bakın →</a>
+            </div>
+        }
+        else
+        {
+            <div class="row no-gutters">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var lesson = Model[i];
+                    var img = programImages[i % programImages.Length];
+                    <div class="col-md-6 col-lg-4">
+                        <div class="package-program ftco-animate">
+                            <a href="/Schedule/Index" class="img d-flex justify-content-center align-items-center"
+                               style="background-image: url('/yogalax-master/images/@img');">
+                                <div class="text p-5 text-center">
+                                    <h3>@lesson.Name</h3>
+                                    <p>@lesson.TrainerName</p>
+                                    <p>@lesson.Date.ToString("dd MMM yyyy HH:mm")</p>
+                                    <span class="btn btn-white btn-sm mt-2">Rezervasyon Yap</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>

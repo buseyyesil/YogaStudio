@@ -7,6 +7,8 @@
         public string? UserName { get; set; }
         public int LessonId { get; set; }
         public string? LessonName { get; set; }
+        public string? TrainerName { get; set; }
+        public DateTime? LessonDate { get; set; }
     }
 
     public class CreateReservationViewModel

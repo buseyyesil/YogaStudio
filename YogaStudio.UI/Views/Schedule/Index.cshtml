@@ -13,17 +13,16 @@
 
     var dayNames = new Dictionary<DayOfWeek, string>
     {
-        { DayOfWeek.Monday, "Monday" },
-        { DayOfWeek.Tuesday, "Tuesday" },
-        { DayOfWeek.Wednesday, "Wednesday" },
-        { DayOfWeek.Thursday, "Thursday" },
-        { DayOfWeek.Friday, "Friday" },
-        { DayOfWeek.Saturday, "Saturday" },
-        { DayOfWeek.Sunday, "Sunday" }
+        { DayOfWeek.Monday, "Pazartesi" },
+        { DayOfWeek.Tuesday, "Salı" },
+        { DayOfWeek.Wednesday, "Çarşamba" },
+        { DayOfWeek.Thursday, "Perşembe" },
+        { DayOfWeek.Friday, "Cuma" },
+        { DayOfWeek.Saturday, "Cumartesi" },
+        { DayOfWeek.Sunday, "Pazar" }
     };
 
     var colorClasses = new[] { "color-1", "color-2", "color-3", "color-4", "color-5" };
-
     var allTimes = Model != null
         ? Model.Values.SelectMany(x => x).Select(x => x.Date.ToString("HH:mm")).Distinct().OrderBy(x => x).ToList()
         : new List<string>();
@@ -36,7 +35,7 @@
             <div class="col-md-9 ftco-animate text-center">
                 <h1 class="mb-3 bread">Yoga Schedule</h1>
                 <p class="breadcrumbs">
-                    <span class="mr-2"><a href="/Home/Index">Home</a></span>
+                    <span class="mr-2"><a href="/Default/Index">Home</a></span>
                     <span>Schedule</span>
                 </p>
             </div>
@@ -48,11 +47,17 @@
     <div class="container">
         @if (TempData["Success"] != null)
         {
-            <div class="alert alert-success">@TempData["Success"]</div>
+            <div class="alert alert-success alert-dismissible">
+                @TempData["Success"]
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
         }
         @if (TempData["Error"] != null)
         {
-            <div class="alert alert-danger">@TempData["Error"]</div>
+            <div class="alert alert-danger alert-dismissible">
+                @TempData["Error"]
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
         }
 
         @if (Model == null || !Model.Any())
@@ -63,11 +68,11 @@
         {
             <div class="row">
                 <div class="col-md-12 ftco-animate">
-                    <div class="sched-list">
+                    <div class="sched-list table-responsive">
                         <table class="table">
                             <thead class="thead-primary">
                                 <tr class="text-center">
-                                    <th>&nbsp;</th>
+                                    <th>Saat</th>
                                     @foreach (var day in days)
                                     {
                                         <th>@dayNames[day]</th>
@@ -89,24 +94,51 @@
                                             var lesson = Model.ContainsKey(day)
                                             ? Model[day].FirstOrDefault(x => x.Date.ToString("HH:mm") == time)
                                             : null;
-
                                             var colorClass = colorClasses[colorIndex % colorClasses.Length];
                                             colorIndex++;
 
                                             if (lesson != null)
                                             {
-                                                <td class="@colorClass">
+                                                var reserved = ViewBag.ReservationCounts != null && ((Dictionary<int, int>)ViewBag.ReservationCounts).ContainsKey(lesson.LessonId)
+                                                ? ((Dictionary<int, int>)ViewBag.ReservationCounts)[lesson.LessonId]
+                                                : 0;
+                                                var isFull = reserved >= lesson.Capacity;
+
+                                                <td class="@colorClass @(isFull ? "opacity-50" : "")">
                                                     <h3>@lesson.Name</h3>
                                                     <span class="at">@lesson.TrainerTitle</span>
                                                     <p class="time">@lesson.Date.ToString("HH:mm") - @lesson.Date.AddMinutes(90).ToString("HH:mm")</p>
                                                     <span class="trainer">@lesson.TrainerName</span>
-                                                    <br /><small>Kapasite: @lesson.Capacity</small>
-                                                    @if (Context.Session.GetInt32("UserId") != null)
+                                                    <br />
+                                                    @* Kontenjan göstergesi *@
+                                                    <div class="mt-2">
+                                                        <span class="badge @(isFull ? "badge-danger" : "badge-success")">
+                                                            @reserved / @lesson.Capacity
+                                                            @(isFull ? "🔴 Dolu" : "🟢 Müsait")
+                                                        </span>
+                                                    </div>
+                                                    @* Rezervasyon butonu *@
+                                                    @if (!isFull)
                                                     {
-                                                        <form asp-controller="Schedule" asp-action="Reserve" method="post" class="mt-2">
-                                                            <input type="hidden" name="lessonId" value="@lesson.LessonId" />
-                                                            <button type="submit" class="btn btn-sm btn-primary">Rezervasyon Yap</button>
-                                                        </form>
+                                                        @if (Context.Session.GetInt32("UserId") != null)
+                                                        {
+                                                            <form method="post" action="/Schedule/Reserve" class="mt-2">
+                                                                <input type="hidden" name="lessonId" value="@lesson.LessonId" />
+                                                                <button type="submit" class="btn btn-sm btn-primary">
+                                                                    <i class="ion-ios-checkmark-circle"></i> Rezervasyon Yap
+                                                                </button>
+                                                            </form>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="/Auth/Login?returnUrl=/Schedule/Index" class="btn btn-sm btn-outline-primary mt-2">
+                                                                Giriş Yap & Rezervasyon Yap
+                                                            </a>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="btn btn-sm btn-danger mt-2" disabled>Kontenjan Dolu</button>
                                                     }
                                                 </td>
                                             }
@@ -126,8 +158,11 @@
 
         @if (Context.Session.GetInt32("UserId") == null)
         {
-            <div class="text-center mt-3">
-                <p>Rezervasyon yapmak için <a href="/Auth/Login">giriş yapın</a>.</p>
+            <div class="alert alert-warning text-center mt-4">
+                <i class="ion-ios-information-circle"></i>
+                Rezervasyon yapmak için <a href="/Auth/Login" class="font-weight-bold">giriş yapın</a>
+                veya <a href="/Auth/Register" class="font-weight-bold">kayıt olun</a>.
+                Kayıt olmadan da devam edebilirsiniz ama rezervasyonlarınızı takip edemezsiniz.
             </div>
         }
     </div>

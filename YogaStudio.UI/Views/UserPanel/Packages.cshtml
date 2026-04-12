@@ -1,0 +1,90 @@
+﻿@using YogaStudio.UI.Models
+@model List<PackageViewModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Paketler";
+}
+
+<section class="hero-wrap js-fullheight" style="background-image: url('/yogalax-master/images/bg_3.jpg');">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h1 class="mb-3 bread">Paketler</h1>
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="/Default/Index">Home</a></span>
+                    <span class="mr-2"><a href="/UserPanel/Index">Profilim</a></span>
+                    <span>Paketler</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        <div class="row justify-content-center mb-5 pb-3">
+            <div class="col-md-7 heading-section ftco-animate text-center">
+                <h3 class="subheading">Üyelik</h3>
+                <h2 class="mb-1">Paket Seçin</h2>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            @if (Model == null || !Model.Any())
+            {
+                <div class="col-12 text-center">
+                    <p>Henüz paket eklenmemiş.</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var package in Model)
+                {
+                    <div class="col-md-4 ftco-animate mb-4">
+                        <div class="block-7 text-center">
+                            <div class="text-center p-4">
+                                <h2 class="heading">@package.Name</h2>
+                                <span class="price">
+                                    <sup>$</sup>
+                                    <span class="number">@package.Price</span>
+                                </span>
+                                <span class="excerpt d-block mb-3">@package.LessonCount Ders</span>
+
+                                @if (!string.IsNullOrEmpty(package.Description))
+                                {
+                                    <p class="text-muted mb-3">@package.Description</p>
+                                }
+
+                                <ul class="pricing-text mb-4">
+                                    <li>@package.LessonCount Ders Hakkı</li>
+                                    <li>Grup Dersleri</li>
+                                    <li>Eğitmen Desteği</li>
+                                    <li>Fitness Yönlendirme</li>
+                                </ul>
+
+                                <form asp-action="PurchasePackage" asp-controller="UserPanel" method="post">
+                                    <input type="hidden" name="packageId" value="@package.PackageId" />
+                                    <button type="submit" class="btn btn-primary d-block w-100 py-3"
+                                            onclick="return confirm('@package.Name paketini satın almak istediğinize emin misiniz?')">
+                                        Satın Al
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>

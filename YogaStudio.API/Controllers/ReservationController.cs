@@ -35,7 +35,28 @@ namespace YogaStudio.API.Controllers
 
             return Ok(values);
         }
+        [HttpGet("user/{userId}")]
+        public IActionResult GetReservationsByUser(int userId)
+        {
+            var values = _appDbContext.Reservations
+                .Include(x => x.User)
+                .Include(x => x.Lesson)
+                .ThenInclude(x => x.Trainer)
+                .Where(x => x.UserId == userId)
+                .Select(x => new
+                {
+                    x.ReservationId,
+                    x.UserId,
+                    UserName = x.User != null ? x.User.Username : null,
+                    x.LessonId,
+                    LessonName = x.Lesson != null ? x.Lesson.Name : null,
+                    LessonDate = x.Lesson != null ? x.Lesson.Date : (DateTime?)null,
+                    TrainerName = x.Lesson != null && x.Lesson.Trainer != null ? x.Lesson.Trainer.Name : null
+                })
+                .ToList();
 
+            return Ok(values);
+        }
         [HttpGet("{id}")]
         public IActionResult GetReservationById(int id)
         {

@@ -91,6 +91,21 @@ namespace YogaStudio.UI.Services
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<List<dynamic>> GetUserPackagesAsync(int userId)
+        {
+            var response = await _httpClient.GetAsync($"api/UserPackage/user/{userId}");
+            if (!response.IsSuccessStatusCode) return new List<dynamic>();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<dynamic>>(json, JsonOptions()) ?? new List<dynamic>();
+        }
+
+        public async Task<bool> PurchasePackageAsync(int userId, int packageId)
+        {
+            var json = JsonSerializer.Serialize(new { UserId = userId, PackageId = packageId });
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync("api/UserPackage/purchase", content);
+            return response.IsSuccessStatusCode;
+        }
 
         public async Task<bool> CreateReservationAsync(CreateReservationViewModel model)
         {
@@ -107,14 +122,64 @@ namespace YogaStudio.UI.Services
             var json = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<List<ReservationViewModel>>(json, JsonOptions()) ?? new List<ReservationViewModel>();
         }
-
+        public async Task<List<ReservationViewModel>> GetUserReservationsAsync(int userId)
+        {
+            var response = await _httpClient.GetAsync($"api/Reservation/user/{userId}");
+            if (!response.IsSuccessStatusCode) return new List<ReservationViewModel>();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<ReservationViewModel>>(json, JsonOptions())
+                   ?? new List<ReservationViewModel>();
+        }
         public async Task<bool> DeleteReservationAsync(int id)
         {
             var response = await _httpClient.DeleteAsync($"api/Reservation/{id}");
             return response.IsSuccessStatusCode;
         }
+    
 
-  
+        public async Task<bool> SendContactMessageAsync(string name, string email, string phone, string subject, string message)
+        {
+            var json = JsonSerializer.Serialize(new { Name = name, Email = email, Phone = phone, Subject = subject, Message = message });
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync("api/Contact", content);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<List<ContactMessageViewModel>> GetContactMessagesAsync()
+        {
+            var response = await _httpClient.GetAsync("api/Contact");
+            if (!response.IsSuccessStatusCode) return new List<ContactMessageViewModel>();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<ContactMessageViewModel>>(json, JsonOptions())
+                   ?? new List<ContactMessageViewModel>();
+        }
+
+        public async Task<bool> DeleteContactMessageAsync(int id)
+        {
+            var response = await _httpClient.DeleteAsync($"api/Contact/{id}");
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> MarkContactMessageAsReadAsync(int id)
+        {
+            var response = await _httpClient.PutAsync($"api/Contact/read/{id}", null);
+            return response.IsSuccessStatusCode;
+        }
+        public async Task<List<dynamic>> GetMonthlyReservationsAsync()
+        {
+            var response = await _httpClient.GetAsync("api/Stats/monthly-reservations");
+            if (!response.IsSuccessStatusCode) return new List<dynamic>();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<dynamic>>(json, JsonOptions()) ?? new List<dynamic>();
+        }
+
+        public async Task<List<dynamic>> GetLessonDistributionAsync()
+        {
+            var response = await _httpClient.GetAsync("api/Stats/lesson-distribution");
+            if (!response.IsSuccessStatusCode) return new List<dynamic>();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<dynamic>>(json, JsonOptions()) ?? new List<dynamic>();
+        }
 
         public async Task<List<BlogViewModel>> GetBlogsAsync()
         {

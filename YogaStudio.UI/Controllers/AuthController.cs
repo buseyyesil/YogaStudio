@@ -29,7 +29,10 @@ namespace YogaStudio.UI.Controllers
             HttpContext.Session.SetString("Username", username);
             HttpContext.Session.SetString("Role", role);
 
-            return RedirectToAction("Index", "Home");
+            if (role == "Admin")
+                return RedirectToAction("Index", "Admin");
+
+            return RedirectToAction("Index", "Default");
         }
 
         public IActionResult Register() => View();

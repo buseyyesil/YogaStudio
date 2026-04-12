@@ -1,0 +1,93 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Hedefine Göre Program";
+}
+
+<section class="hero-wrap js-fullheight" style="background-image: url('/yogalax-master/images/bg_3.jpg');">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h1 class="mb-3 bread">Hedefine Göre Program</h1>
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="/Default/Index">Home</a></span>
+                    <span>Hedef</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-8 text-center">
+                <h2 class="mb-3">Hedefiniz Nedir?</h2>
+                <p class="text-muted">Size en uygun yoga programını önermemiz için hedefinizi seçin.</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-3 mb-4">
+                <a href="/Goal/Recommend?goal=weightloss" class="text-decoration-none">
+                    <div class="card text-center shadow-sm h-100 goal-card">
+                        <div class="card-body p-4">
+                            <div style="font-size:50px;" class="mb-3">🔥</div>
+                            <h4>Zayıflamak</h4>
+                            <p class="text-muted">Kalori yakın, metabolizmanızı hızlandırın</p>
+                            <span class="btn btn-primary mt-2">Program Öner</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 mb-4">
+                <a href="/Goal/Recommend?goal=toning" class="text-decoration-none">
+                    <div class="card text-center shadow-sm h-100 goal-card">
+                        <div class="card-body p-4">
+                            <div style="font-size:50px;" class="mb-3">💪</div>
+                            <h4>Sıkılaşmak</h4>
+                            <p class="text-muted">Kaslarınızı güçlendirin ve vücudunuzu sıkılaştırın</p>
+                            <span class="btn btn-primary mt-2">Program Öner</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 mb-4">
+                <a href="/Goal/Recommend?goal=pregnancy" class="text-decoration-none">
+                    <div class="card text-center shadow-sm h-100 goal-card">
+                        <div class="card-body p-4">
+                            <div style="font-size:50px;" class="mb-3">🤰</div>
+                            <h4>Hamilelik</h4>
+                            <p class="text-muted">Hamilelik sürecinizi yoga ile destekleyin</p>
+                            <span class="btn btn-primary mt-2">Program Öner</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 mb-4">
+                <a href="/Goal/Recommend?goal=stress" class="text-decoration-none">
+                    <div class="card text-center shadow-sm h-100 goal-card">
+                        <div class="card-body p-4">
+                            <div style="font-size:50px;" class="mb-3">🧘</div>
+                            <h4>Stres Azaltma</h4>
+                            <p class="text-muted">Zihninizi dinlendirin ve stresten kurtulun</p>
+                            <span class="btn btn-primary mt-2">Program Öner</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .goal-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+    }
+
+        .goal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+        }
+</style>

@@ -7,6 +7,7 @@
     <h3 class="page-title">Dashboard</h3>
 </div>
 
+@* SAYAÇ KARTLARI *@
 <div class="row">
     <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
         <div class="card bg-primary">
@@ -18,7 +19,7 @@
                     </div>
                     <i class="card-icon-indicator mdi mdi-calendar bg-inverse-icon-primary"></i>
                 </div>
-                <a href="/Admin/Lessons" class="text-white"><small>Tümünü Gör</small></a>
+                <a href="/Admin/Lessons" class="text-white"><small>Tümünü Gör →</small></a>
             </div>
         </div>
     </div>
@@ -32,7 +33,7 @@
                     </div>
                     <i class="card-icon-indicator mdi mdi-account bg-inverse-icon-success"></i>
                 </div>
-                <a href="/Admin/Trainers" class="text-white"><small>Tümünü Gör</small></a>
+                <a href="/Admin/Trainers" class="text-white"><small>Tümünü Gör →</small></a>
             </div>
         </div>
     </div>
@@ -46,7 +47,7 @@
                     </div>
                     <i class="card-icon-indicator mdi mdi-bookmark bg-inverse-icon-warning"></i>
                 </div>
-                <a href="/Admin/Reservations" class="text-white"><small>Tümünü Gör</small></a>
+                <a href="/Admin/Reservations" class="text-white"><small>Tümünü Gör →</small></a>
             </div>
         </div>
     </div>
@@ -60,14 +61,35 @@
                     </div>
                     <i class="card-icon-indicator mdi mdi-account-multiple bg-inverse-icon-danger"></i>
                 </div>
-                <a href="/Admin/Users" class="text-white"><small>Tümünü Gör</small></a>
+                <a href="/Admin/Users" class="text-white"><small>Tümünü Gör →</small></a>
             </div>
         </div>
     </div>
 </div>
 
+@* GRAFİKLER *@
 <div class="row">
-    <div class="col-md-6 grid-margin stretch-card">
+    <div class="col-md-8 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Aylık Rezervasyon Grafiği</h4>
+                <canvas id="monthlyChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Ders Dağılımı</h4>
+                <canvas id="pieChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* SON REZERVASYONlar + HIZLI ERİŞİM *@
+<div class="row">
+    <div class="col-md-7 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Son Rezervasyonlar</h4>
@@ -90,13 +112,17 @@
                                     </tr>
                                 }
                             }
+                            else
+                            {
+                                <tr><td colspan="2" class="text-center">Henüz rezervasyon yok.</td></tr>
+                            }
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-6 grid-margin stretch-card">
+    <div class="col-md-5 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Hızlı Erişim</h4>
@@ -121,8 +147,76 @@
                             <i class="mdi mdi-plus"></i> Blog Ekle
                         </a>
                     </div>
+                    <div class="col-6 mb-3">
+                        <a href="/Admin/CreateTestimony" class="btn btn-secondary btn-block">
+                            <i class="mdi mdi-plus"></i> Yorum Ekle
+                        </a>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <a href="/Admin/Reservations" class="btn btn-dark btn-block">
+                            <i class="mdi mdi-eye"></i> Rezervasyonlar
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/Breeze-Free-Bootstrap-Admin-Template-1.0.0/template/assets/vendors/chart.js/Chart.min.js"></script>
+    <script>
+        // Aylık Rezervasyon Grafiği
+        var monthlyData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.MonthlyStats ?? new List<dynamic>()));
+        var monthNames = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
+
+        var monthlyLabels = monthlyData.map(function(d) {
+            return monthNames[d.month - 1] + " " + d.year;
+        });
+        var monthlyCounts = monthlyData.map(function(d) { return d.count; });
+
+        var ctx1 = document.getElementById('monthlyChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: monthlyLabels.length > 0 ? monthlyLabels : ["Veri Yok"],
+                datasets: [{
+                    label: 'Rezervasyon Sayısı',
+                    data: monthlyCounts.length > 0 ? monthlyCounts : [0],
+                    backgroundColor: 'rgba(0, 123, 255, 0.7)',
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    yAxes: [{ ticks: { beginAtZero: true } }]
+                }
+            }
+        });
+
+        // Ders Dağılımı Pasta Grafiği
+        var lessonData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.LessonDist ?? new List<dynamic>()));
+        var lessonLabels = lessonData.map(function(d) { return d.lessonName; });
+        var lessonCounts = lessonData.map(function(d) { return d.count; });
+
+        var ctx2 = document.getElementById('pieChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: lessonLabels.length > 0 ? lessonLabels : ["Veri Yok"],
+                datasets: [{
+                    data: lessonCounts.length > 0 ? lessonCounts : [1],
+                    backgroundColor: [
+                        '#007bff', '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6f42c1'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: { position: 'bottom' }
+            }
+        });
+    </script>
+}

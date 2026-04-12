@@ -33,17 +33,21 @@ namespace YogaStudio.UI.Controllers
             var trainers = await _apiService.GetTrainersAsync();
             var reservations = await _apiService.GetReservationsAsync();
             var users = await _apiService.GetUsersAsync();
+            var monthlyStats = await _apiService.GetMonthlyReservationsAsync();
+            var lessonDist = await _apiService.GetLessonDistributionAsync();
 
             ViewBag.LessonCount = lessons.Count;
             ViewBag.TrainerCount = trainers.Count;
             ViewBag.ReservationCount = reservations.Count;
             ViewBag.UserCount = users.Count;
             ViewBag.RecentReservations = reservations.Take(5).ToList();
+            ViewBag.MonthlyStats = monthlyStats;
+            ViewBag.LessonDist = lessonDist;
 
             return View();
         }
 
-   
+
         public async Task<IActionResult> Lessons()
         {
             var check = CheckAdmin();
@@ -268,6 +272,36 @@ namespace YogaStudio.UI.Controllers
 
             var users = await _apiService.GetUsersAsync();
             return View(users);
+        }
+     
+        public async Task<IActionResult> Messages()
+        {
+            var check = CheckAdmin();
+            if (check != null) return check;
+
+            var messages = await _apiService.GetContactMessagesAsync();
+            return View(messages);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteMessage(int id)
+        {
+            var check = CheckAdmin();
+            if (check != null) return check;
+
+            var success = await _apiService.DeleteContactMessageAsync(id);
+            TempData[success ? "Success" : "Error"] = success ? "Mesaj silindi!" : "Mesaj silinemedi.";
+            return RedirectToAction("Messages");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkAsRead(int id)
+        {
+            var check = CheckAdmin();
+            if (check != null) return check;
+
+            await _apiService.MarkContactMessageAsReadAsync(id);
+            return RedirectToAction("Messages");
         }
     }
 }

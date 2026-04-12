@@ -1,0 +1,145 @@
+﻿@using YogaStudio.UI.Models
+@model List<ReservationViewModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Profilim";
+}
+
+<section class="hero-wrap js-fullheight" style="background-image: url('/yogalax-master/images/bg_3.jpg');">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h1 class="mb-3 bread">Profilim</h1>
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="/Default/Index">Home</a></span>
+                    <span>Profil</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible">
+                @TempData["Success"]
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible">
+                @TempData["Error"]
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        }
+
+        <div class="row">
+            @* PROFİL KARTI *@
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <span style="font-size: 60px;">🧘</span>
+                        </div>
+                        <h4 class="font-weight-bold">@ViewBag.Username</h4>
+                        <p class="text-muted">@ViewBag.Role</p>
+                        <hr />
+                        <div class="text-left">
+                            <p><i class="ion-ios-person mr-2"></i> <strong>Kullanıcı Adı:</strong> @ViewBag.Username</p>
+                            <p><i class="ion-ios-bookmark mr-2"></i> <strong>Toplam Rezervasyon:</strong> @(Model?.Count ?? 0)</p>
+                        </div>
+                        <a href="/UserPanel/Packages" class="btn btn-primary btn-block mt-3">
+                            <i class="ion-ios-cart mr-2"></i> Paket Satın Al
+                        </a>
+                        <a href="/Auth/Logout" class="btn btn-outline-danger btn-block mt-2">
+                            <i class="ion-ios-log-out mr-2"></i> Çıkış Yap
+                        </a>
+                    </div>
+                </div>
+
+                @* AKTİF PAKETLERİM *@
+                @if (ViewBag.UserPackages != null)
+                {
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-body">
+                            <h5 class="card-title">📦 Aktif Paketlerim</h5>
+                            @foreach (var p in ViewBag.UserPackages)
+                            {
+                                <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                                    <span>@p.GetProperty("packageName").GetString()</span>
+                                    <span class="badge badge-success">
+                                        @p.GetProperty("remainingLessons").GetInt32() ders kaldı
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @* REZERVASYONLARım *@
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">
+                            <i class="ion-ios-calendar mr-2"></i> Rezervasyonlarım
+                        </h4>
+
+                        @if (Model == null || !Model.Any())
+                        {
+                            <div class="alert alert-info">
+                                Henüz rezervasyonunuz yok.
+                                <a href="/Schedule/Index" class="font-weight-bold">Ders programına bakın →</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Ders</th>
+                                            <th>Eğitmen</th>
+                                            <th>Tarih</th>
+                                            <th>İşlem</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var reservation in Model)
+                                        {
+                                            <tr>
+                                                <td>@reservation.LessonName</td>
+                                                <td>@reservation.TrainerName</td>
+                                                <td>@(reservation.LessonDate?.ToString("dd.MM.yyyy HH:mm") ?? "-")</td>
+                                                <td>
+                                                    <form method="post" action="/UserPanel/CancelReservation" style="display:inline;">
+                                                        <input type="hidden" name="id" value="@reservation.ReservationId" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                                onclick="return confirm('Rezervasyonu iptal etmek istediğinize emin misiniz?')">
+                                                            <i class="ion-ios-close-circle"></i> İptal
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+
+                        <div class="mt-3">
+                            <a href="/Schedule/Index" class="btn btn-primary">
+                                <i class="ion-ios-add-circle mr-2"></i> Yeni Rezervasyon Yap
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

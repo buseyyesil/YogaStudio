@@ -1,0 +1,92 @@
+﻿@using YogaStudio.UI.Models
+@model List<ContactMessageViewModel>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Mesajlar";
+}
+
+<div class="page-header">
+    <h3 class="page-title">
+        İletişim Mesajları
+        @if (Model != null && Model.Any(x => !x.IsRead))
+        {
+            <span class="badge badge-danger ml-2">@Model.Count(x => !x.IsRead) Okunmamış</span>
+        }
+    </h3>
+</div>
+
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Ad</th>
+                                <th>Email</th>
+                                <th>Telefon</th>
+                                <th>Konu</th>
+                                <th>Mesaj</th>
+                                <th>Tarih</th>
+                                <th>Durum</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model == null || !Model.Any())
+                            {
+                                <tr><td colspan="9" class="text-center">Henüz mesaj yok.</td></tr>
+                            }
+                            else
+                            {
+                                @foreach (var msg in Model)
+                                {
+                                    <tr class="@(!msg.IsRead ? "table-warning" : "")">
+                                        <td>@msg.ContactMessageId</td>
+                                        <td>@msg.Name</td>
+                                        <td><a href="mailto:@msg.Email">@msg.Email</a></td>
+                                        <td>@msg.Phone</td>
+                                        <td>@msg.Subject</td>
+                                        <td>@msg.Message.Substring(0, Math.Min(50, msg.Message.Length))...</td>
+                                        <td>@msg.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                                        <td>
+                                            @if (msg.IsRead)
+                                            {
+                                                <span class="badge badge-success">Okundu</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-warning">Okunmadı</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (!msg.IsRead)
+                                            {
+                                                <form asp-action="MarkAsRead" asp-controller="Admin" method="post" style="display:inline;">
+                                                    <input type="hidden" name="id" value="@msg.ContactMessageId" />
+                                                    <button type="submit" class="btn btn-sm btn-success mb-1">
+                                                        <i class="mdi mdi-check"></i> Okundu
+                                                    </button>
+                                                </form>
+                                            }
+                                            <form asp-action="DeleteMessage" asp-controller="Admin" method="post" style="display:inline;">
+                                                <input type="hidden" name="id" value="@msg.ContactMessageId" />
+                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                        onclick="return confirm('Mesajı silmek istediğinize emin misiniz?')">
+                                                    <i class="mdi mdi-delete"></i> Sil
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

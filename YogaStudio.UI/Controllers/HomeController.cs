@@ -12,12 +12,10 @@ namespace YogaStudio.UI.Controllers
         {
             _logger = logger;
         }
-
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Default");
         }
-
         public IActionResult Privacy()
         {
             return View();
