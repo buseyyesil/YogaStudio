@@ -1,0 +1,58 @@
+﻿@using YogaStudio.UI.Models
+@model List<ReservationViewModel>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Rezervasyonlar";
+}
+
+<div class="page-header">
+    <h3 class="page-title">Rezervasyonlar</h3>
+</div>
+
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Kullanıcı</th>
+                                <th>Ders</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model == null || !Model.Any())
+                            {
+                                <tr><td colspan="4" class="text-center">Henüz rezervasyon yok.</td></tr>
+                            }
+                            else
+                            {
+                                @foreach (var reservation in Model)
+                                {
+                                    <tr>
+                                        <td>@reservation.ReservationId</td>
+                                        <td>@reservation.UserName</td>
+                                        <td>@reservation.LessonName</td>
+                                        <td>
+                                            <form asp-action="DeleteReservation" asp-controller="Admin" method="post" style="display:inline;">
+                                                <input type="hidden" name="id" value="@reservation.ReservationId" />
+                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                        onclick="return confirm('Silmek istediğinize emin misiniz?')">
+                                                    <i class="mdi mdi-delete"></i> Sil
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Ders Ekle";
+}
+
+<div class="page-header">
+    <h3 class="page-title">Ders Ekle</h3>
+    <a href="/Admin/Lessons" class="btn btn-secondary">
+        <i class="mdi mdi-arrow-left"></i> Geri
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <form asp-action="CreateLesson" asp-controller="Admin" method="post">
+                    <div class="form-group">
+                        <label>Ders Adı</label>
+                        <input type="text" name="Name" class="form-control" placeholder="Ders adı" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Eğitmen</label>
+                        <select name="TrainerId" class="form-control" required>
+                            <option value="">Eğitmen Seçin</option>
+                            @if (ViewBag.Trainers != null)
+                            {
+                                @foreach (var trainer in ViewBag.Trainers)
+                                {
+                                    <option value="@trainer.TrainerId">@trainer.Name @trainer.Surname</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tarih ve Saat</label>
+                        <input type="datetime-local" name="Date" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Kapasite</label>
+                        <input type="number" name="Capacity" class="form-control" placeholder="Kapasite" min="1" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">Kaydet</button>
+                    <a href="/Admin/Lessons" class="btn btn-light">İptal</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

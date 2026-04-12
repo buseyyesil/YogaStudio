@@ -1,0 +1,61 @@
+﻿@using YogaStudio.UI.Models
+@model List<TrainerViewModel>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Eğitmenler";
+}
+
+<div class="page-header">
+    <h3 class="page-title">Eğitmenler</h3>
+    <a href="/Admin/CreateTrainer" class="btn btn-primary">
+        <i class="mdi mdi-plus"></i> Yeni Eğitmen Ekle
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Ad Soyad</th>
+                                <th>Ünvan</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model == null || !Model.Any())
+                            {
+                                <tr><td colspan="4" class="text-center">Henüz eğitmen eklenmemiş.</td></tr>
+                            }
+                            else
+                            {
+                                @foreach (var trainer in Model)
+                                {
+                                    <tr>
+                                        <td>@trainer.TrainerId</td>
+                                        <td>@trainer.Name @trainer.Surname</td>
+                                        <td>@trainer.Title</td>
+                                        <td>
+                                            <form asp-action="DeleteTrainer" asp-controller="Admin" method="post" style="display:inline;">
+                                                <input type="hidden" name="id" value="@trainer.TrainerId" />
+                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                        onclick="return confirm('Silmek istediğinize emin misiniz?')">
+                                                    <i class="mdi mdi-delete"></i> Sil
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

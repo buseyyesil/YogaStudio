@@ -1,0 +1,40 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Eğitmen Ekle";
+}
+
+<div class="page-header">
+    <h3 class="page-title">Eğitmen Ekle</h3>
+    <a href="/Admin/Trainers" class="btn btn-secondary">
+        <i class="mdi mdi-arrow-left"></i> Geri
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <form asp-action="CreateTrainer" asp-controller="Admin" method="post">
+                    <div class="form-group">
+                        <label>Ad</label>
+                        <input type="text" name="Name" class="form-control" placeholder="Ad" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Soyad</label>
+                        <input type="text" name="Surname" class="form-control" placeholder="Soyad" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Ünvan</label>
+                        <input type="text" name="Title" class="form-control" placeholder="Ünvan (Owner / Head Coach)" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Resim URL</label>
+                        <input type="text" name="ImageUrl" class="form-control" placeholder="https://..." required />
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">Kaydet</button>
+                    <a href="/Admin/Trainers" class="btn btn-light">İptal</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

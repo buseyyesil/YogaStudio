@@ -1,0 +1,54 @@
+﻿@using YogaStudio.UI.Models
+@model List<UserViewModel>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Kullanıcılar";
+}
+
+<div class="page-header">
+    <h3 class="page-title">Kullanıcılar</h3>
+</div>
+
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Kullanıcı Adı</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model == null || !Model.Any())
+                            {
+                                <tr><td colspan="4" class="text-center">Henüz kullanıcı yok.</td></tr>
+                            }
+                            else
+                            {
+                                @foreach (var user in Model)
+                                {
+                                    <tr>
+                                        <td>@user.UserId</td>
+                                        <td>@user.Username</td>
+                                        <td>@user.Email</td>
+                                        <td>
+                                            <span class="badge badge-@(user.Role == "Admin" ? "danger" : "success")">
+                                                @user.Role
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

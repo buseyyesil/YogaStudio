@@ -1,0 +1,65 @@
+﻿@using YogaStudio.UI.Models
+@model List<LessonViewModel>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Dersler";
+}
+
+<div class="page-header">
+    <h3 class="page-title">Dersler</h3>
+    <a href="/Admin/CreateLesson" class="btn btn-primary">
+        <i class="mdi mdi-plus"></i> Yeni Ders Ekle
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Ders Adı</th>
+                                <th>Eğitmen</th>
+                                <th>Tarih</th>
+                                <th>Kapasite</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model == null || !Model.Any())
+                            {
+                                <tr><td colspan="6" class="text-center">Henüz ders eklenmemiş.</td></tr>
+                            }
+                            else
+                            {
+                                @foreach (var lesson in Model)
+                                {
+                                    <tr>
+                                        <td>@lesson.LessonId</td>
+                                        <td>@lesson.Name</td>
+                                        <td>@lesson.TrainerName</td>
+                                        <td>@lesson.Date.ToString("dd.MM.yyyy HH:mm")</td>
+                                        <td>@lesson.Capacity</td>
+                                        <td>
+                                            <form asp-action="DeleteLesson" asp-controller="Admin" method="post" style="display:inline;">
+                                                <input type="hidden" name="id" value="@lesson.LessonId" />
+                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                        onclick="return confirm('Silmek istediğinize emin misiniz?')">
+                                                    <i class="mdi mdi-delete"></i> Sil
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

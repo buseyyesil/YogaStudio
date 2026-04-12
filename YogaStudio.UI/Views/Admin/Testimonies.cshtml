@@ -1,0 +1,63 @@
+﻿@using YogaStudio.UI.Models
+@model List<TestimonyViewModel>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Yorumlar";
+}
+
+<div class="page-header">
+    <h3 class="page-title">Yorumlar</h3>
+    <a href="/Admin/CreateTestimony" class="btn btn-primary">
+        <i class="mdi mdi-plus"></i> Yeni Yorum Ekle
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Ad</th>
+                                <th>Pozisyon</th>
+                                <th>İçerik</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model == null || !Model.Any())
+                            {
+                                <tr><td colspan="5" class="text-center">Henüz yorum eklenmemiş.</td></tr>
+                            }
+                            else
+                            {
+                                @foreach (var testimony in Model)
+                                {
+                                    <tr>
+                                        <td>@testimony.TestimonyId</td>
+                                        <td>@testimony.Name</td>
+                                        <td>@testimony.Position</td>
+                                        <td>@testimony.Content.Substring(0, Math.Min(50, testimony.Content.Length))...</td>
+                                        <td>
+                                            <form asp-action="DeleteTestimony" asp-controller="Admin" method="post" style="display:inline;">
+                                                <input type="hidden" name="id" value="@testimony.TestimonyId" />
+                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                        onclick="return confirm('Silmek istediğinize emin misiniz?')">
+                                                    <i class="mdi mdi-delete"></i> Sil
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
