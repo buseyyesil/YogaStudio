@@ -6,52 +6,137 @@
     ViewData["Title"] = "Rezervasyonlar";
 }
 
-<div class="page-header">
-    <h3 class="page-title">Rezervasyonlar</h3>
+<div class="page-header d-flex justify-content-between align-items-center">
+    <h3 class="page-title">
+        Rezervasyonlar
+        <span class="badge badge-primary ml-2">@(Model?.Count ?? 0) Toplam</span>
+    </h3>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-check-circle mr-2"></i> @TempData["Success"]
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-alert-circle mr-2"></i> @TempData["Error"]
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+}
+
+@* ÖZET KARTLARI *@
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body py-3 px-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-0">Toplam Rezervasyon</p>
+                        <h3 class="mb-0">@(Model?.Count ?? 0)</h3>
+                    </div>
+                    <i class="mdi mdi-bookmark-multiple" style="font-size:40px; opacity:0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body py-3 px-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-0">Aktif Kullanıcı</p>
+                        <h3 class="mb-0">@(Model?.Select(x => x.UserId).Distinct().Count() ?? 0)</h3>
+                    </div>
+                    <i class="mdi mdi-account-check" style="font-size:40px; opacity:0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-white">
+            <div class="card-body py-3 px-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-0">Toplam Ders</p>
+                        <h3 class="mb-0">@(Model?.Select(x => x.LessonId).Distinct().Count() ?? 0)</h3>
+                    </div>
+                    <i class="mdi mdi-calendar-check" style="font-size:40px; opacity:0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row">
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead class="bg-light">
-                            <tr>
-                                <th>#</th>
-                                <th>Kullanıcı</th>
-                                <th>Ders</th>
-                                <th>İşlem</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model == null || !Model.Any())
-                            {
-                                <tr><td colspan="4" class="text-center">Henüz rezervasyon yok.</td></tr>
-                            }
-                            else
-                            {
+                @if (Model == null || !Model.Any())
+                {
+                    <div class="text-center py-5">
+                        <i class="mdi mdi-calendar-blank" style="font-size:60px; color:#ccc;"></i>
+                        <h5 class="text-muted mt-3">Henüz rezervasyon bulunmuyor.</h5>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Kullanıcı</th>
+                                    <th>Ders</th>
+                                    <th>Ders Tarihi</th>
+                                    <th>İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 @foreach (var reservation in Model)
                                 {
                                     <tr>
                                         <td>@reservation.ReservationId</td>
-                                        <td>@reservation.UserName</td>
-                                        <td>@reservation.LessonName</td>
                                         <td>
-                                            <form asp-action="DeleteReservation" asp-controller="Admin" method="post" style="display:inline;">
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mr-2"
+                                                     style="width:35px; height:35px; font-size:14px;">
+                                                    @(reservation.UserName?.Substring(0, 1).ToUpper())
+                                                </div>
+                                                <span>@reservation.UserName</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-info p-2">@reservation.LessonName</span>
+                                        </td>
+                                        <td>
+                                            @if (reservation.LessonDate.HasValue)
+                                            {
+                                                <span>@reservation.LessonDate.Value.ToString("dd.MM.yyyy HH:mm")</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">-</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <form method="post" action="/Admin/DeleteReservation" style="display:inline;">
                                                 <input type="hidden" name="id" value="@reservation.ReservationId" />
                                                 <button type="submit" class="btn btn-sm btn-danger"
-                                                        onclick="return confirm('Silmek istediğinize emin misiniz?')">
-                                                    <i class="mdi mdi-delete"></i> Sil
+                                                        onclick="return confirm('Bu rezervasyonu iptal etmek istediğinize emin misiniz?')">
+                                                    <i class="mdi mdi-delete"></i> İptal Et
                                                 </button>
                                             </form>
                                         </td>
                                     </tr>
                                 }
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                            </tbody>
+                        </table>
+                    </div>
+                }
             </div>
         </div>
     </div>

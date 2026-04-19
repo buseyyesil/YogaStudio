@@ -39,7 +39,7 @@
         }
 
         <div class="row">
-            @* PROFİL KARTI *@
+  
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-body text-center p-4">
@@ -62,7 +62,6 @@
                     </div>
                 </div>
 
-                @* AKTİF PAKETLERİM *@
                 @if (ViewBag.UserPackages != null)
                 {
                     <div class="card shadow-sm mt-4">
@@ -82,7 +81,6 @@
                 }
             </div>
 
-            @* REZERVASYONLARım *@
             <div class="col-md-8">
                 <div class="card shadow-sm">
                     <div class="card-body">
@@ -107,6 +105,7 @@
                                             <th>Eğitmen</th>
                                             <th>Tarih</th>
                                             <th>İşlem</th>
+                                            <th>Zoom</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -124,6 +123,18 @@
                                                             <i class="ion-ios-close-circle"></i> İptal
                                                         </button>
                                                     </form>
+                                                <td>
+                                                        @if (!string.IsNullOrEmpty(reservation.ZoomLink))
+                                                        {
+                                                        <a href="@reservation.ZoomLink" target="_blank" class="btn btn-sm btn-info">
+                                                            <i class="ion-ios-videocam"></i> Katıl
+                                                        </a>
+                                                        }
+                                                        else
+                                                        {
+                                                        <span class="text-muted">-</span>
+                                                        }
+                                                </td>
                                                 </td>
                                             </tr>
                                         }

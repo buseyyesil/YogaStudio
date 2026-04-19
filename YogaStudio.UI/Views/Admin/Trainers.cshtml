@@ -41,7 +41,10 @@
                                         <td>@trainer.Name @trainer.Surname</td>
                                         <td>@trainer.Title</td>
                                         <td>
-                                            <form asp-action="DeleteTrainer" asp-controller="Admin" method="post" style="display:inline;">
+                                            <a href="/Admin/EditTrainer/@trainer.TrainerId" class="btn btn-sm btn-warning mr-1">
+                                                <i class="mdi mdi-pencil"></i> Düzenle
+                                            </a>
+                                            <form method="post" action="/Admin/DeleteTrainer" style="display:inline;">
                                                 <input type="hidden" name="id" value="@trainer.TrainerId" />
                                                 <button type="submit" class="btn btn-sm btn-danger"
                                                         onclick="return confirm('Silmek istediğinize emin misiniz?')">

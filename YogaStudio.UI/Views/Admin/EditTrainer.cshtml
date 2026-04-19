@@ -1,0 +1,51 @@
+﻿@using YogaStudio.UI.Models
+@model TrainerViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Eğitmen Düzenle";
+}
+
+<div class="page-header">
+    <h3 class="page-title">Eğitmen Düzenle</h3>
+    <a href="/Admin/Trainers" class="btn btn-secondary">
+        <i class="mdi mdi-arrow-left"></i> Geri
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" action="/Admin/EditTrainer/@Model.TrainerId">
+                    <div class="form-group">
+                        <label>Ad</label>
+                        <input type="text" name="Name" class="form-control" value="@Model.Name" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Soyad</label>
+                        <input type="text" name="Surname" class="form-control" value="@Model.Surname" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Ünvan</label>
+                        <input type="text" name="Title" class="form-control" value="@Model.Title" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Resim URL</label>
+                        <input type="text" name="ImageUrl" class="form-control" value="@Model.ImageUrl" required />
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <div class="form-group">
+                            <label>Mevcut Resim</label>
+                            <br />
+                            <img src="@Model.ImageUrl" style="width:100px; height:100px; object-fit:cover; border-radius:50%;" />
+                        </div>
+                    }
+                    <button type="submit" class="btn btn-primary mr-2">Güncelle</button>
+                    <a href="/Admin/Trainers" class="btn btn-light">İptal</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

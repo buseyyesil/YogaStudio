@@ -1,0 +1,39 @@
+﻿@using YogaStudio.UI.Models
+@model BlogViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Blog Düzenle";
+}
+
+<div class="page-header">
+    <h3 class="page-title">Blog Düzenle</h3>
+    <a href="/Admin/Blogs" class="btn btn-secondary">
+        <i class="mdi mdi-arrow-left"></i> Geri
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-8 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" action="/Admin/EditBlog/@Model.BlogPostId">
+                    <div class="form-group">
+                        <label>Başlık</label>
+                        <input type="text" name="Title" class="form-control" value="@Model.Title" required />
+                    </div>
+                    <div class="form-group">
+                        <label>İçerik</label>
+                        <textarea name="Content" class="form-control" rows="8" required>@Model.Content</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Resim URL</label>
+                        <input type="text" name="ImageUrl" class="form-control" value="@Model.ImageUrl" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">Güncelle</button>
+                    <a href="/Admin/Blogs" class="btn btn-light">İptal</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

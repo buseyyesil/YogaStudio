@@ -68,12 +68,12 @@ namespace YogaStudio.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateLesson(string Name, int TrainerId, DateTime Date, int Capacity)
+        public async Task<IActionResult> CreateLesson(string Name, int TrainerId, DateTime Date, int Capacity, string? ZoomLink)
         {
             var check = CheckAdmin();
             if (check != null) return check;
 
-            var success = await _apiService.CreateLessonAsync(Name, TrainerId, Date, Capacity);
+            var success = await _apiService.CreateLessonAsync(Name, TrainerId, Date, Capacity, ZoomLink);
             TempData[success ? "Success" : "Error"] = success ? "Ders eklendi!" : "Ders eklenemedi.";
             return RedirectToAction("Lessons");
         }
@@ -127,7 +127,27 @@ namespace YogaStudio.UI.Controllers
             TempData[success ? "Success" : "Error"] = success ? "Eğitmen silindi!" : "Eğitmen silinemedi.";
             return RedirectToAction("Trainers");
         }
+        public async Task<IActionResult> EditTrainer(int id)
+        {
+            var check = CheckAdmin();
+            if (check != null) return check;
 
+            var trainers = await _apiService.GetTrainersAsync();
+            var trainer = trainers.FirstOrDefault(x => x.TrainerId == id);
+            if (trainer == null) return NotFound();
+            return View(trainer);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditTrainer(int id, string Name, string Surname, string Title, string ImageUrl)
+        {
+            var check = CheckAdmin();
+            if (check != null) return check;
+
+            var success = await _apiService.UpdateTrainerAsync(id, Name, Surname, Title, ImageUrl);
+            TempData[success ? "Success" : "Error"] = success ? "Eğitmen güncellendi!" : "Eğitmen güncellenemedi.";
+            return RedirectToAction("Trainers");
+        }
         public async Task<IActionResult> Packages()
         {
             var check = CheckAdmin();
@@ -204,7 +224,27 @@ namespace YogaStudio.UI.Controllers
             TempData[success ? "Success" : "Error"] = success ? "Blog silindi!" : "Blog silinemedi.";
             return RedirectToAction("Blogs");
         }
+        public async Task<IActionResult> EditBlog(int id)
+        {
+            var check = CheckAdmin();
+            if (check != null) return check;
 
+            var blogs = await _apiService.GetBlogsAsync();
+            var blog = blogs.FirstOrDefault(x => x.BlogPostId == id);
+            if (blog == null) return NotFound();
+            return View(blog);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditBlog(int id, string Title, string Content, string ImageUrl)
+        {
+            var check = CheckAdmin();
+            if (check != null) return check;
+
+            var success = await _apiService.UpdateBlogAsync(id, Title, Content, ImageUrl);
+            TempData[success ? "Success" : "Error"] = success ? "Blog güncellendi!" : "Blog güncellenemedi.";
+            return RedirectToAction("Blogs");
+        }
 
         public async Task<IActionResult> Testimonies()
         {

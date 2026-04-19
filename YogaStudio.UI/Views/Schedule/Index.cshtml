@@ -110,14 +110,22 @@
                                                     <p class="time">@lesson.Date.ToString("HH:mm") - @lesson.Date.AddMinutes(90).ToString("HH:mm")</p>
                                                     <span class="trainer">@lesson.TrainerName</span>
                                                     <br />
-                                                    @* Kontenjan göstergesi *@
+                                       
                                                     <div class="mt-2">
                                                         <span class="badge @(isFull ? "badge-danger" : "badge-success")">
                                                             @reserved / @lesson.Capacity
                                                             @(isFull ? "🔴 Dolu" : "🟢 Müsait")
                                                         </span>
+                                                        @if (!string.IsNullOrEmpty(lesson.ZoomLink))
+                                                        {
+                                                            <div class="mt-2">
+                                                                <a href="@lesson.ZoomLink" target="_blank" class="btn btn-sm btn-info">
+                                                                    <i class="ion-ios-videocam"></i> Zoom'a Katıl
+                                                                </a>
+                                                            </div>
+                                                        }
                                                     </div>
-                                                    @* Rezervasyon butonu *@
+
                                                     @if (!isFull)
                                                     {
                                                         @if (Context.Session.GetInt32("UserId") != null)

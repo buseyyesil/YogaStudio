@@ -88,7 +88,8 @@ namespace YogaStudio.API.Controllers
                 Name = dto.Name,
                 TrainerId = dto.TrainerId,
                 Date = dto.Date,
-                Capacity = dto.Capacity
+                Capacity = dto.Capacity,
+                ZoomLink = dto.ZoomLink
             };
 
             _context.Lessons.Add(lesson);
@@ -138,7 +139,7 @@ namespace YogaStudio.API.Controllers
             value.Date = dto.Date;
             value.Capacity = dto.Capacity;
             value.TrainerId = dto.TrainerId;
-
+            value.ZoomLink = dto.ZoomLink;
             _context.SaveChanges();
 
             return Ok("Ders güncellendi");

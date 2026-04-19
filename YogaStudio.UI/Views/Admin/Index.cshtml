@@ -1,120 +1,121 @@
 ﻿@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Admin Dashboard";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="page-header">
-    <h3 class="page-title">Dashboard</h3>
-</div>
-
-@* SAYAÇ KARTLARI *@
-<div class="row">
-    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-        <div class="card bg-primary">
-            <div class="card-body px-3 py-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="color-card">
-                        <p class="mb-0 color-card-head text-white">Dersler</p>
-                        <h2 class="text-white">@ViewBag.LessonCount</h2>
-                    </div>
-                    <i class="card-icon-indicator mdi mdi-calendar bg-inverse-icon-primary"></i>
-                </div>
-                <a href="/Admin/Lessons" class="text-white"><small>Tümünü Gör →</small></a>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-        <div class="card bg-success">
-            <div class="card-body px-3 py-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="color-card">
-                        <p class="mb-0 color-card-head text-white">Eğitmenler</p>
-                        <h2 class="text-white">@ViewBag.TrainerCount</h2>
-                    </div>
-                    <i class="card-icon-indicator mdi mdi-account bg-inverse-icon-success"></i>
-                </div>
-                <a href="/Admin/Trainers" class="text-white"><small>Tümünü Gör →</small></a>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-        <div class="card bg-warning">
-            <div class="card-body px-3 py-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="color-card">
-                        <p class="mb-0 color-card-head text-white">Rezervasyonlar</p>
-                        <h2 class="text-white">@ViewBag.ReservationCount</h2>
-                    </div>
-                    <i class="card-icon-indicator mdi mdi-bookmark bg-inverse-icon-warning"></i>
-                </div>
-                <a href="/Admin/Reservations" class="text-white"><small>Tümünü Gör →</small></a>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-        <div class="card bg-danger">
-            <div class="card-body px-3 py-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="color-card">
-                        <p class="mb-0 color-card-head text-white">Kullanıcılar</p>
-                        <h2 class="text-white">@ViewBag.UserCount</h2>
-                    </div>
-                    <i class="card-icon-indicator mdi mdi-account-multiple bg-inverse-icon-danger"></i>
-                </div>
-                <a href="/Admin/Users" class="text-white"><small>Tümünü Gör →</small></a>
-            </div>
-        </div>
+<div class="page-header flex-wrap">
+    <h3 class="mb-0">
+        Hoş Geldiniz, <span class="text-primary">@Context.Session.GetString("Username")</span>! 🧘
+        <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block">YogaStudio Yönetim Paneli</span>
+    </h3>
+    <div class="d-flex">
+        <a href="/Admin/CreateLesson" class="btn btn-sm bg-white btn-icon-text border">
+            <i class="mdi mdi-plus btn-icon-prepend"></i> Ders Ekle
+        </a>
+        <a href="/Admin/CreateTrainer" class="btn btn-sm bg-white btn-icon-text border ml-3">
+            <i class="mdi mdi-account-plus btn-icon-prepend"></i> Eğitmen Ekle
+        </a>
+        <a href="/Default/Index" target="_blank" class="btn btn-sm ml-3 btn-success">Siteye Git</a>
     </div>
 </div>
 
-@* GRAFİKLER *@
+
 <div class="row">
-    <div class="col-md-8 grid-margin stretch-card">
+    <div class="col-xl-3 col-lg-6 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="mb-2 text-dark font-weight-normal">Toplam Ders</h5>
+                <h2 class="mb-4 text-dark font-weight-bold">@ViewBag.LessonCount</h2>
+                <div class="dashboard-progress dashboard-progress-1 d-flex align-items-center justify-content-center item-parent">
+                    <i class="mdi mdi-calendar icon-md absolute-center text-dark"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="mb-2 text-dark font-weight-normal">Eğitmenler</h5>
+                <h2 class="mb-4 text-dark font-weight-bold">@ViewBag.TrainerCount</h2>
+                <div class="dashboard-progress dashboard-progress-2 d-flex align-items-center justify-content-center item-parent">
+                    <i class="mdi mdi-account icon-md absolute-center text-dark"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="mb-2 text-dark font-weight-normal">Rezervasyonlar</h5>
+                <h2 class="mb-4 text-dark font-weight-bold">@ViewBag.ReservationCount</h2>
+                <div class="dashboard-progress dashboard-progress-3 d-flex align-items-center justify-content-center item-parent">
+                    <i class="mdi mdi-bookmark icon-md absolute-center text-dark"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="mb-2 text-dark font-weight-normal">Kullanıcılar</h5>
+                <h2 class="mb-4 text-dark font-weight-bold">@ViewBag.UserCount</h2>
+                <div class="dashboard-progress dashboard-progress-4 d-flex align-items-center justify-content-center item-parent">
+                    <i class="mdi mdi-account-multiple icon-md absolute-center text-dark"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Aylık Rezervasyon Grafiği</h4>
-                <canvas id="monthlyChart" height="100"></canvas>
+                <canvas id="monthlyChart"></canvas>
             </div>
         </div>
     </div>
-    <div class="col-md-4 grid-margin stretch-card">
+    <div class="col-lg-6 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Ders Dağılımı</h4>
-                <canvas id="pieChart" height="200"></canvas>
+                <canvas id="doughnutChart"></canvas>
             </div>
         </div>
     </div>
 </div>
 
-@* SON REZERVASYONlar + HIZLI ERİŞİM *@
+
 <div class="row">
-    <div class="col-md-7 grid-margin stretch-card">
+    <div class="col-lg-8 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Son Rezervasyonlar</h4>
                 <div class="table-responsive">
                     <table class="table">
-                        <thead class="bg-light">
+                        <thead>
                             <tr>
                                 <th>Kullanıcı</th>
                                 <th>Ders</th>
+                                <th>Durum</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if (ViewBag.RecentReservations != null)
+                            @if (ViewBag.RecentReservations != null && ((IEnumerable<dynamic>)ViewBag.RecentReservations).Any())
                             {
                                 @foreach (var r in ViewBag.RecentReservations)
                                 {
                                     <tr>
                                         <td>@r.UserName</td>
                                         <td>@r.LessonName</td>
+                                        <td><label class="badge badge-success">Aktif</label></td>
                                     </tr>
                                 }
                             }
                             else
                             {
-                                <tr><td colspan="2" class="text-center">Henüz rezervasyon yok.</td></tr>
+                                <tr><td colspan="3" class="text-center text-muted">Henüz rezervasyon yok.</td></tr>
                             }
                         </tbody>
                     </table>
@@ -122,42 +123,30 @@
             </div>
         </div>
     </div>
-    <div class="col-md-5 grid-margin stretch-card">
+
+
+    <div class="col-lg-4 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Hızlı Erişim</h4>
-                <div class="row mt-3">
-                    <div class="col-6 mb-3">
-                        <a href="/Admin/CreateLesson" class="btn btn-primary btn-block">
-                            <i class="mdi mdi-plus"></i> Ders Ekle
-                        </a>
-                    </div>
-                    <div class="col-6 mb-3">
-                        <a href="/Admin/CreateTrainer" class="btn btn-success btn-block">
-                            <i class="mdi mdi-plus"></i> Eğitmen Ekle
-                        </a>
-                    </div>
-                    <div class="col-6 mb-3">
-                        <a href="/Admin/CreatePackage" class="btn btn-warning btn-block">
-                            <i class="mdi mdi-plus"></i> Paket Ekle
-                        </a>
-                    </div>
-                    <div class="col-6 mb-3">
-                        <a href="/Admin/CreateBlog" class="btn btn-info btn-block">
-                            <i class="mdi mdi-plus"></i> Blog Ekle
-                        </a>
-                    </div>
-                    <div class="col-6 mb-3">
-                        <a href="/Admin/CreateTestimony" class="btn btn-secondary btn-block">
-                            <i class="mdi mdi-plus"></i> Yorum Ekle
-                        </a>
-                    </div>
-                    <div class="col-6 mb-3">
-                        <a href="/Admin/Reservations" class="btn btn-dark btn-block">
-                            <i class="mdi mdi-eye"></i> Rezervasyonlar
-                        </a>
-                    </div>
-                </div>
+                <a href="/Admin/CreateLesson" class="btn btn-inverse-primary btn-block mb-2 text-left">
+                    <i class="mdi mdi-calendar-plus mr-2"></i> Yeni Ders Ekle
+                </a>
+                <a href="/Admin/CreateTrainer" class="btn btn-inverse-success btn-block mb-2 text-left">
+                    <i class="mdi mdi-account-plus mr-2"></i> Yeni Eğitmen Ekle
+                </a>
+                <a href="/Admin/CreatePackage" class="btn btn-inverse-warning btn-block mb-2 text-left">
+                    <i class="mdi mdi-package-variant mr-2"></i> Yeni Paket Ekle
+                </a>
+                <a href="/Admin/CreateBlog" class="btn btn-inverse-info btn-block mb-2 text-left">
+                    <i class="mdi mdi-newspaper mr-2"></i> Yeni Blog Ekle
+                </a>
+                <a href="/Admin/Messages" class="btn btn-inverse-danger btn-block mb-2 text-left">
+                    <i class="mdi mdi-email mr-2"></i> Mesajları Gör
+                </a>
+                <a href="/Admin/Reservations" class="btn btn-inverse-dark btn-block text-left">
+                    <i class="mdi mdi-bookmark mr-2"></i> Tüm Rezervasyonlar
+                </a>
             </div>
         </div>
     </div>
@@ -166,56 +155,66 @@
 @section Scripts {
     <script src="~/Breeze-Free-Bootstrap-Admin-Template-1.0.0/template/assets/vendors/chart.js/Chart.min.js"></script>
     <script>
-        // Aylık Rezervasyon Grafiği
-        var monthlyData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.MonthlyStats ?? new List<dynamic>()));
-        var monthNames = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
+        document.addEventListener('DOMContentLoaded', function () {
 
-        var monthlyLabels = monthlyData.map(function(d) {
-            return monthNames[d.month - 1] + " " + d.year;
-        });
-        var monthlyCounts = monthlyData.map(function(d) { return d.count; });
+            var monthlyData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.MonthlyStats ?? new List<dynamic>()));
+            var monthNames = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
+            var monthlyLabels = monthlyData.length > 0 ? monthlyData.map(function (d) { return monthNames[d.month - 1] + " " + d.year; }) : ["Oca", "Şub", "Mar", "Nis", "May", "Haz"];
+            var monthlyCounts = monthlyData.length > 0 ? monthlyData.map(function (d) { return d.count; }) : [0, 0, 0, 0, 0, 0];
 
-        var ctx1 = document.getElementById('monthlyChart').getContext('2d');
-        new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: monthlyLabels.length > 0 ? monthlyLabels : ["Veri Yok"],
-                datasets: [{
-                    label: 'Rezervasyon Sayısı',
-                    data: monthlyCounts.length > 0 ? monthlyCounts : [0],
-                    backgroundColor: 'rgba(0, 123, 255, 0.7)',
-                    borderColor: 'rgba(0, 123, 255, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    yAxes: [{ ticks: { beginAtZero: true } }]
-                }
+       
+            var ctxLine = document.getElementById('monthlyChart');
+            if (ctxLine) {
+                new Chart(ctxLine.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: monthlyLabels,
+                        datasets: [{
+                            label: 'Rezervasyon',
+                            data: monthlyCounts,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 2,
+                            fill: true,
+                            pointRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
             }
-        });
 
-        // Ders Dağılımı Pasta Grafiği
-        var lessonData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.LessonDist ?? new List<dynamic>()));
-        var lessonLabels = lessonData.map(function(d) { return d.lessonName; });
-        var lessonCounts = lessonData.map(function(d) { return d.count; });
+            var lessonData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.LessonDist ?? new List<dynamic>()));
+            var lessonLabels = lessonData.length > 0 ? lessonData.map(function (d) { return d.lessonName; }) : ["Veri Yok"];
+            var lessonCounts = lessonData.length > 0 ? lessonData.map(function (d) { return d.count; }) : [1];
 
-        var ctx2 = document.getElementById('pieChart').getContext('2d');
-        new Chart(ctx2, {
-            type: 'doughnut',
-            data: {
-                labels: lessonLabels.length > 0 ? lessonLabels : ["Veri Yok"],
-                datasets: [{
-                    data: lessonCounts.length > 0 ? lessonCounts : [1],
-                    backgroundColor: [
-                        '#007bff', '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6f42c1'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                legend: { position: 'bottom' }
+            var ctxDoughnut = document.getElementById('doughnutChart');
+            if (ctxDoughnut) {
+                new Chart(ctxDoughnut.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: lessonLabels,
+                        datasets: [{
+                            data: lessonCounts,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.8)',
+                                'rgba(54, 162, 235, 0.8)',
+                                'rgba(255, 206, 86, 0.8)',
+                                'rgba(75, 192, 192, 0.8)',
+                                'rgba(153, 102, 255, 0.8)',
+                                'rgba(255, 159, 64, 0.8)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true
+                    }
+                });
             }
         });
     </script>

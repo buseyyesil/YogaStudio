@@ -51,7 +51,8 @@ namespace YogaStudio.API.Controllers
                     x.LessonId,
                     LessonName = x.Lesson != null ? x.Lesson.Name : null,
                     LessonDate = x.Lesson != null ? x.Lesson.Date : (DateTime?)null,
-                    TrainerName = x.Lesson != null && x.Lesson.Trainer != null ? x.Lesson.Trainer.Name : null
+                    TrainerName = x.Lesson != null && x.Lesson.Trainer != null ? x.Lesson.Trainer.Name : null,
+                    ZoomLink = x.Lesson != null ? x.Lesson.ZoomLink : null
                 })
                 .ToList();
 

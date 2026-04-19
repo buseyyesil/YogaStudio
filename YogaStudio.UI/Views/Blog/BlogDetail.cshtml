@@ -1,0 +1,106 @@
+﻿@using YogaStudio.UI.Models
+@model BlogViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="hero-wrap js-fullheight" style="background-image: url('/yogalax-master/images/bg_3.jpg');">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h1 class="mb-3 bread">Blog Detay</h1>
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="/Default/Index">Ana Sayfa</a></span>
+                    <span class="mr-2"><a href="/Blog/Index">Blog</a></span>
+                    <span>@Model.Title</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 ftco-animate">
+                <h2 class="mb-3">@Model.Title</h2>
+                <p class="text-muted mb-4">
+                    <span class="icon-calendar mr-2"></span> @Model.CreatedAt.ToString("dd MMMM yyyy")
+                </p>
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <p>
+                        <img src="@Model.ImageUrl" alt="@Model.Title" class="img-fluid rounded" />
+                    </p>
+                }
+                <p>@Model.Content</p>
+
+                <div class="tag-widget post-tag-container mb-5 mt-5">
+                    <div class="tagcloud">
+                        <a href="/Blog/Index" class="tag-cloud-link">Yoga</a>
+                        <a href="/Blog/Index" class="tag-cloud-link">Sağlık</a>
+                        <a href="/Blog/Index" class="tag-cloud-link">Meditasyon</a>
+                        <a href="/Blog/Index" class="tag-cloud-link">Pilates</a>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <a href="/Blog/Index" class="btn btn-primary">
+                        <i class="ion-ios-arrow-back mr-2"></i> Tüm Yazılar
+                    </a>
+                </div>
+            </div>
+
+            @* SIDEBAR *@
+            <div class="col-lg-4 sidebar ftco-animate">
+                <div class="sidebar-box ftco-animate">
+                    <h3 class="heading-2">Son Yazılar</h3>
+                    @if (ViewBag.RecentBlogs != null)
+                    {
+                        @foreach (var blog in ViewBag.RecentBlogs)
+                        {
+                            <div class="block-21 mb-4 d-flex">
+                                <a class="blog-img mr-4" href="/Blog/Detail/@blog.BlogPostId"
+                                   style="background-image: url('@blog.ImageUrl');"></a>
+                                <div class="text">
+                                    <h3 class="heading">
+                                        <a href="/Blog/Detail/@blog.BlogPostId">@blog.Title</a>
+                                    </h3>
+                                    <div class="meta">
+                                        <div>
+                                            <a href="#"><span class="icon-calendar"></span> @blog.CreatedAt.ToString("dd MMM yyyy")</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+
+                <div class="sidebar-box ftco-animate">
+                    <h3 class="heading-2">Kategoriler</h3>
+                    <li><a href="/Goal/Recommend?goal=weightloss">Zayıflama <span>(3)</span></a></li>
+                    <li><a href="/Goal/Recommend?goal=toning">Sıkılaşma <span>(2)</span></a></li>
+                    <li><a href="/Goal/Recommend?goal=pregnancy">Hamilelik <span>(2)</span></a></li>
+                    <li><a href="/Goal/Recommend?goal=stress">Stres Azaltma <span>(3)</span></a></li>
+                </div>
+
+                <div class="sidebar-box ftco-animate">
+                    <h3 class="heading-2">Etiketler</h3>
+                    <div class="tagcloud">
+                        <a href="#" class="tag-cloud-link">yoga</a>
+                        <a href="#" class="tag-cloud-link">meditasyon</a>
+                        <a href="#" class="tag-cloud-link">pilates</a>
+                        <a href="#" class="tag-cloud-link">nefes</a>
+                        <a href="#" class="tag-cloud-link">sağlık</a>
+                        <a href="#" class="tag-cloud-link">hamilelik</a>
+                        <a href="#" class="tag-cloud-link">stres</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

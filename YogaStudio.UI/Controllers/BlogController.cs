@@ -17,5 +17,13 @@ namespace YogaStudio.UI.Controllers
             var blogs = await _apiService.GetBlogsAsync();
             return View(blogs);
         }
+        public async Task<IActionResult> Detail(int id)
+        {
+            var blog = await _apiService.GetBlogByIdAsync(id);
+            if (blog == null) return NotFound();
+            var allBlogs = await _apiService.GetBlogsAsync();
+            ViewBag.RecentBlogs = allBlogs.Where(x => x.BlogPostId != id).Take(3).ToList();
+            return View(blog);
+        }
     }
 }

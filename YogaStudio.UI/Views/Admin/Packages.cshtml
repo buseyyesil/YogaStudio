@@ -1,39 +1,62 @@
-﻿@{
+﻿@using YogaStudio.UI.Models
+@model List<PackageViewModel>
+
+@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Eğitmen Ekle";
+    ViewData["Title"] = "Paketler";
 }
 
 <div class="page-header">
-    <h3 class="page-title">Eğitmen Ekle</h3>
-    <a href="/Admin/Trainers" class="btn btn-secondary">
-        <i class="mdi mdi-arrow-left"></i> Geri
+    <h3 class="page-title">Paketler</h3>
+    <a href="/Admin/CreatePackage" class="btn btn-primary">
+        <i class="mdi mdi-plus"></i> Yeni Paket Ekle
     </a>
 </div>
 
 <div class="row">
-    <div class="col-md-6 grid-margin stretch-card">
+    <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <form asp-action="CreateTrainer" asp-controller="Admin" method="post">
-                    <div class="form-group">
-                        <label>Ad</label>
-                        <input type="text" name="Name" class="form-control" placeholder="Ad" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Soyad</label>
-                        <input type="text" name="Surname" class="form-control" placeholder="Soyad" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Ünvan</label>
-                        <input type="text" name="Title" class="form-control" placeholder="Ünvan (Owner / Head Coach)" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Resim URL</label>
-                        <input type="text" name="ImageUrl" class="form-control" placeholder="https://..." required />
-                    </div>
-                    <button type="submit" class="btn btn-primary mr-2">Kaydet</button>
-                    <a href="/Admin/Trainers" class="btn btn-light">İptal</a>
-                </form>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Paket Adı</th>
+                                <th>Ders Sayısı</th>
+                                <th>Fiyat</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model == null || !Model.Any())
+                            {
+                                <tr><td colspan="5" class="text-center">Henüz paket eklenmemiş.</td></tr>
+                            }
+                            else
+                            {
+                                @foreach (var package in Model)
+                                {
+                                    <tr>
+                                        <td>@package.PackageId</td>
+                                        <td>@package.Name</td>
+                                        <td>@package.LessonCount</td>
+                                        <td>$@package.Price</td>
+                                        <td>
+                                            <form asp-action="DeletePackage" asp-controller="Admin" method="post" style="display:inline;">
+                                                <input type="hidden" name="id" value="@package.PackageId" />
+                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                        onclick="return confirm('Silmek istediğinize emin misiniz?')">
+                                                    <i class="mdi mdi-delete"></i> Sil
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

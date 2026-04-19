@@ -31,9 +31,9 @@ namespace YogaStudio.UI.Services
             return JsonSerializer.Deserialize<LessonViewModel>(json, JsonOptions());
         }
 
-        public async Task<bool> CreateLessonAsync(string name, int trainerId, DateTime date, int capacity)
+        public async Task<bool> CreateLessonAsync(string name, int trainerId, DateTime date, int capacity, string? zoomLink = null)
         {
-            var json = JsonSerializer.Serialize(new { Name = name, TrainerId = trainerId, Date = date, Capacity = capacity });
+            var json = JsonSerializer.Serialize(new { Name = name, TrainerId = trainerId, Date = date, Capacity = capacity, ZoomLink = zoomLink });
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync("api/Lesson", content);
             return response.IsSuccessStatusCode;
@@ -68,7 +68,13 @@ namespace YogaStudio.UI.Services
             var response = await _httpClient.DeleteAsync($"api/Trainer/{id}");
             return response.IsSuccessStatusCode;
         }
-
+        public async Task<bool> UpdateTrainerAsync(int id, string name, string surname, string title, string imageUrl)
+        {
+            var json = JsonSerializer.Serialize(new { Name = name, Surname = surname, Title = title, ImageUrl = imageUrl });
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"api/Trainer/{id}", content);
+            return response.IsSuccessStatusCode;
+        }
         public async Task<List<PackageViewModel>> GetPackagesAsync()
         {
             var response = await _httpClient.GetAsync("api/Package");
@@ -188,7 +194,13 @@ namespace YogaStudio.UI.Services
             var json = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<List<BlogViewModel>>(json, JsonOptions()) ?? new List<BlogViewModel>();
         }
-
+        public async Task<BlogViewModel?> GetBlogByIdAsync(int id)
+        {
+            var response = await _httpClient.GetAsync($"api/Blog/{id}");
+            if (!response.IsSuccessStatusCode) return null;
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<BlogViewModel>(json, JsonOptions());
+        }
         public async Task<bool> CreateBlogAsync(string title, string content, string imageUrl)
         {
             var json = JsonSerializer.Serialize(new { Title = title, Content = content, ImageUrl = imageUrl, CreatedAt = DateTime.Now });
@@ -203,7 +215,13 @@ namespace YogaStudio.UI.Services
             return response.IsSuccessStatusCode;
         }
 
-
+        public async Task<bool> UpdateBlogAsync(int id, string title, string content, string imageUrl)
+        {
+            var json = JsonSerializer.Serialize(new { Title = title, Content = content, ImageUrl = imageUrl, CreatedAt = DateTime.Now });
+            var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"api/Blog/{id}", jsonContent);
+            return response.IsSuccessStatusCode;
+        }
 
         public async Task<List<TestimonyViewModel>> GetTestimoniesAsync()
         {

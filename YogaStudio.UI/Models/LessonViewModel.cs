@@ -9,5 +9,6 @@
         public int TrainerId { get; set; }
         public string? TrainerName { get; set; }
         public string? TrainerTitle { get; set; }
+        public string? ZoomLink { get; set; }
     }
 }

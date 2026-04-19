@@ -13,5 +13,5 @@ public class Lesson
 
     public List<Reservation> Reservations { get; set; } = new List<Reservation>(); //bire çok (liste) ,1 ders → ÇOK rezervasyon, 1 derse birden fazla kişi kayıt olur
     public string? Category { get; set; }
-
+    public string? ZoomLink { get; set; }
 }
