@@ -60,12 +60,6 @@ namespace YogaStudio.API.Controllers
             _context.SaveChanges();
             return Ok("Blog yazısı güncellendi");
         }
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
-        {
-            var value = _context.BlogPosts.FirstOrDefault(x => x.BlogPostId == id);
-            if (value == null) return NotFound();
-            return Ok(value);
-        }
+      
     }
 }

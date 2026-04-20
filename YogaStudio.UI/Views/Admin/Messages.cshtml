@@ -20,72 +20,97 @@
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead class="bg-light">
-                            <tr>
-                                <th>#</th>
-                                <th>Ad</th>
-                                <th>Email</th>
-                                <th>Telefon</th>
-                                <th>Konu</th>
-                                <th>Mesaj</th>
-                                <th>Tarih</th>
-                                <th>Durum</th>
-                                <th>İşlem</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model == null || !Model.Any())
+                <table class="table">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Ad</th>
+                            <th>Email</th>
+                            <th>Konu</th>
+                            <th>Tarih</th>
+                            <th>Durum</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model == null || !Model.Any())
+                        {
+                            <tr><td colspan="7" class="text-center">Henüz mesaj yok.</td></tr>
+                        }
+                        else
+                        {
+                            @foreach (var msg in Model)
                             {
-                                <tr><td colspan="9" class="text-center">Henüz mesaj yok.</td></tr>
-                            }
-                            else
-                            {
-                                @foreach (var msg in Model)
-                                {
-                                    <tr class="@(!msg.IsRead ? "table-warning" : "")">
-                                        <td>@msg.ContactMessageId</td>
-                                        <td>@msg.Name</td>
-                                        <td><a href="mailto:@msg.Email">@msg.Email</a></td>
-                                        <td>@msg.Phone</td>
-                                        <td>@msg.Subject</td>
-                                        <td>@msg.Message.Substring(0, Math.Min(50, msg.Message.Length))...</td>
-                                        <td>@msg.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
-                                        <td>
-                                            @if (msg.IsRead)
-                                            {
-                                                <span class="badge badge-success">Okundu</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge badge-warning">Okunmadı</span>
-                                            }
-                                        </td>
-                                        <td>
-                                            @if (!msg.IsRead)
-                                            {
-                                                <form asp-action="MarkAsRead" asp-controller="Admin" method="post" style="display:inline;">
-                                                    <input type="hidden" name="id" value="@msg.ContactMessageId" />
-                                                    <button type="submit" class="btn btn-sm btn-success mb-1">
-                                                        <i class="mdi mdi-check"></i> Okundu
-                                                    </button>
-                                                </form>
-                                            }
-                                            <form asp-action="DeleteMessage" asp-controller="Admin" method="post" style="display:inline;">
+                                <tr class="@(!msg.IsRead ? "table-warning" : "")">
+                                    <td>@msg.ContactMessageId</td>
+                                    <td>@msg.Name</td>
+                                    <td>@msg.Email</td>
+                                    <td>@msg.Subject</td>
+                                    <td>@msg.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                                    <td>
+                                        @if (msg.IsRead)
+                                        {
+                                            <span class="badge badge-success">Okundu</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-warning">Okunmadı</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info mb-1"
+                                                data-toggle="modal" data-target="#msgModal@(msg.ContactMessageId)">
+                                            <i class="mdi mdi-eye"></i> Gör
+                                        </button>
+                                        @if (!msg.IsRead)
+                                        {
+                                            <form method="post" action="/Admin/MarkAsRead" style="display:inline;">
                                                 <input type="hidden" name="id" value="@msg.ContactMessageId" />
-                                                <button type="submit" class="btn btn-sm btn-danger"
-                                                        onclick="return confirm('Mesajı silmek istediğinize emin misiniz?')">
-                                                    <i class="mdi mdi-delete"></i> Sil
+                                                <button type="submit" class="btn btn-sm btn-success mb-1">
+                                                    <i class="mdi mdi-check"></i> Okundu
                                                 </button>
                                             </form>
-                                        </td>
-                                    </tr>
-                                }
+                                        }
+                                        <form method="post" action="/Admin/DeleteMessage" style="display:inline;">
+                                            <input type="hidden" name="id" value="@msg.ContactMessageId" />
+                                            <button type="submit" class="btn btn-sm btn-danger mb-1"
+                                                    onclick="return confirm('Mesajı silmek istediğinize emin misiniz?')">
+                                                <i class="mdi mdi-delete"></i> Sil
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+
+                                @* MODAL *@
+                                <div class="modal fade" id="msgModal@(msg.ContactMessageId)" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">@msg.Name - @msg.Subject</h5>
+                                                <button type="button" class="close" data-dismiss="modal">
+                                                    <span>&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p><strong>Ad:</strong> @msg.Name</p>
+                                                <p><strong>Email:</strong> <a href="mailto:@msg.Email">@msg.Email</a></p>
+                                                <p><strong>Telefon:</strong> @msg.Phone</p>
+                                                <p><strong>Konu:</strong> @msg.Subject</p>
+                                                <p><strong>Tarih:</strong> @msg.CreatedAt.ToString("dd.MM.yyyy HH:mm")</p>
+                                                <hr />
+                                                <p><strong>Mesaj:</strong></p>
+                                                <p>@msg.Message</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

@@ -19,5 +19,6 @@ namespace YogaStudio.Data
         public DbSet<Gallery> Galleries { get; set; }
         public DbSet<UserPackage> UserPackages { get; set; }
         public DbSet<ContactMessage> ContactMessages { get; set; }
+        public DbSet<BlogComment> BlogComments { get; set; }
     }
 }

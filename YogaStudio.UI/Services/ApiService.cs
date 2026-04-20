@@ -104,7 +104,13 @@ namespace YogaStudio.UI.Services
             var json = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<List<dynamic>>(json, JsonOptions()) ?? new List<dynamic>();
         }
-
+        public async Task<bool> UpdateUserAsync(int id, string username, string email)
+        {
+            var json = JsonSerializer.Serialize(new { Username = username, Email = email });
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"api/User/{id}", content);
+            return response.IsSuccessStatusCode;
+        }
         public async Task<bool> PurchasePackageAsync(int userId, int packageId)
         {
             var json = JsonSerializer.Serialize(new { UserId = userId, PackageId = packageId });
@@ -299,5 +305,24 @@ namespace YogaStudio.UI.Services
         {
             PropertyNameCaseInsensitive = true
         };
+    
+
+
+        public async Task<List<BlogCommentViewModel>> GetBlogCommentsAsync(int blogPostId)
+        {
+            var response = await _httpClient.GetAsync($"api/BlogComment/{blogPostId}");
+            if (!response.IsSuccessStatusCode) return new List<BlogCommentViewModel>();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<BlogCommentViewModel>>(json, JsonOptions())
+                   ?? new List<BlogCommentViewModel>();
+        }
+
+        public async Task<bool> AddBlogCommentAsync(int blogPostId, string name, string email, string content)
+        {
+            var json = JsonSerializer.Serialize(new { BlogPostId = blogPostId, Name = name, Email = email, Content = content });
+            var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync("api/BlogComment", jsonContent);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

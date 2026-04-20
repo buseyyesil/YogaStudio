@@ -4,6 +4,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = Model.Title;
+    var comments = ViewBag.Comments as List<BlogCommentViewModel> ?? new List<BlogCommentViewModel>();
 }
 
 <section class="hero-wrap js-fullheight" style="background-image: url('/yogalax-master/images/bg_3.jpg');">
@@ -24,18 +25,35 @@
 
 <section class="ftco-section">
     <div class="container">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible">
+                @TempData["Success"]
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible">
+                @TempData["Error"]
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        }
+
         <div class="row">
             <div class="col-lg-8 ftco-animate">
                 <h2 class="mb-3">@Model.Title</h2>
                 <p class="text-muted mb-4">
                     <span class="icon-calendar mr-2"></span> @Model.CreatedAt.ToString("dd MMMM yyyy")
                 </p>
+
                 @if (!string.IsNullOrEmpty(Model.ImageUrl))
                 {
                     <p>
                         <img src="@Model.ImageUrl" alt="@Model.Title" class="img-fluid rounded" />
                     </p>
                 }
+
                 <p>@Model.Content</p>
 
                 <div class="tag-widget post-tag-container mb-5 mt-5">
@@ -47,10 +65,58 @@
                     </div>
                 </div>
 
-                <div class="mt-4">
-                    <a href="/Blog/Index" class="btn btn-primary">
-                        <i class="ion-ios-arrow-back mr-2"></i> Tüm Yazılar
-                    </a>
+                @* YORUMLAR *@
+                <div class="pt-5 mt-5">
+                    <h3 class="mb-5">@comments.Count Yorum</h3>
+
+                    @if (!comments.Any())
+                    {
+                        <p class="text-muted">Henüz yorum yapılmamış. İlk yorumu siz yapın!</p>
+                    }
+                    else
+                    {
+                        <ul class="comment-list">
+                            @foreach (var comment in comments)
+                            {
+                                <li class="comment">
+                                    <div class="vcard bio">
+                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                                             style="width:60px; height:60px; font-size:24px; min-width:60px;">
+                                            @comment.Name.Substring(0, 1).ToUpper()
+                                        </div>
+                                    </div>
+                                    <div class="comment-body">
+                                        <h3>@comment.Name</h3>
+                                        <div class="meta">@comment.CreatedAt.ToString("dd MMM yyyy HH:mm")</div>
+                                        <p>@comment.Content</p>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+
+                    @* YORUM FORMU *@
+                    <div class="comment-form-wrap pt-5">
+                        <h3 class="mb-5">Yorum Yap</h3>
+                        <form method="post" action="/Blog/AddComment" class="bg-light p-4">
+                            <input type="hidden" name="blogPostId" value="@Model.BlogPostId" />
+                            <div class="form-group">
+                                <label>Ad Soyad *</label>
+                                <input type="text" name="Name" class="form-control bg-white" required />
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="Email" class="form-control bg-white" />
+                            </div>
+                            <div class="form-group">
+                                <label>Yorum *</label>
+                                <textarea name="Content" cols="30" rows="7" class="form-control" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Yorum Gönder" class="btn py-3 px-4 btn-primary" />
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
@@ -70,9 +136,7 @@
                                         <a href="/Blog/Detail/@blog.BlogPostId">@blog.Title</a>
                                     </h3>
                                     <div class="meta">
-                                        <div>
-                                            <a href="#"><span class="icon-calendar"></span> @blog.CreatedAt.ToString("dd MMM yyyy")</a>
-                                        </div>
+                                        <div><a href="#"><span class="icon-calendar"></span> @blog.CreatedAt.ToString("dd MMM yyyy")</a></div>
                                     </div>
                                 </div>
                             </div>

@@ -1,0 +1,54 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Profil Düzenle";
+}
+
+<section class="hero-wrap js-fullheight" style="background-image: url('/yogalax-master/images/bg_3.jpg');">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h1 class="mb-3 bread">Profil Düzenle</h1>
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="/Default/Index">Ana Sayfa</a></span>
+                    <span class="mr-2"><a href="/UserPanel/Index">Profilim</a></span>
+                    <span>Düzenle</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body p-5">
+                        <h4 class="card-title mb-4">
+                            <i class="ion-ios-person mr-2"></i> Profil Bilgilerini Güncelle
+                        </h4>
+                        <form method="post" action="/UserPanel/EditProfile">
+                            <div class="form-group">
+                                <label>Kullanıcı Adı</label>
+                                <input type="text" name="Username" class="form-control"
+                                       value="@ViewBag.Username" required />
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="Email" class="form-control"
+                                       value="@ViewBag.Email" required />
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block py-3 mt-3">
+                                <i class="ion-ios-save mr-2"></i> Güncelle
+                            </button>
+                            <a href="/UserPanel/Index" class="btn btn-outline-secondary btn-block py-3 mt-2">
+                                İptal
+                            </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

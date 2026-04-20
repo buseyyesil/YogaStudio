@@ -76,5 +76,37 @@ namespace YogaStudio.UI.Controllers
 
             return RedirectToAction("Index");
         }
+        public IActionResult EditProfile()
+        {
+            var check = CheckLogin();
+            if (check != null) return check;
+
+            ViewBag.Username = HttpContext.Session.GetString("Username");
+            ViewBag.Email = HttpContext.Session.GetString("Email");
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProfile(string Username, string Email)
+        {
+            var check = CheckLogin();
+            if (check != null) return check;
+
+            var userId = HttpContext.Session.GetInt32("UserId")!.Value;
+            var success = await _apiService.UpdateUserAsync(userId, Username, Email);
+
+            if (success)
+            {
+                HttpContext.Session.SetString("Username", Username);
+                HttpContext.Session.SetString("Email", Email);
+                TempData["Success"] = "Profil başarıyla güncellendi!";
+            }
+            else
+            {
+                TempData["Error"] = "Profil güncellenemedi.";
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }

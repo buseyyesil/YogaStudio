@@ -33,7 +33,7 @@
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center">
             <div class="col-md-9 ftco-animate text-center">
-                <h1 class="mb-3 bread">Yoga Schedule</h1>
+                <h1 class="mb-3 bread">Yoga Programı</h1>
                 <p class="breadcrumbs">
                     <span class="mr-2"><a href="/Default/Index">Home</a></span>
                     <span>Schedule</span>
@@ -139,8 +139,8 @@
                                                         }
                                                         else
                                                         {
-                                                            <a href="/Auth/Login?returnUrl=/Schedule/Index" class="btn btn-sm btn-outline-primary mt-2">
-                                                                Giriş Yap & Rezervasyon Yap
+                                                            <a href="/Auth/Login?returnUrl=/Schedule/Index" class="btn btn-sm btn-primary mt-2">
+                                                                <i class="ion-ios-lock mr-1"></i> Rezervasyon için Giriş Yapın
                                                             </a>
                                                         }
                                                     }
@@ -164,14 +164,6 @@
             </div>
         }
 
-        @if (Context.Session.GetInt32("UserId") == null)
-        {
-            <div class="alert alert-warning text-center mt-4">
-                <i class="ion-ios-information-circle"></i>
-                Rezervasyon yapmak için <a href="/Auth/Login" class="font-weight-bold">giriş yapın</a>
-                veya <a href="/Auth/Register" class="font-weight-bold">kayıt olun</a>.
-                Kayıt olmadan da devam edebilirsiniz ama rezervasyonlarınızı takip edemezsiniz.
-            </div>
-        }
+       
     </div>
 </section>

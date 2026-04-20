@@ -84,5 +84,17 @@ namespace YogaStudio.API.Controllers
                 role = user.Role
             });
         }
+        [HttpPut("{id}")]
+        public IActionResult UpdateUser(int id, [FromBody] UpdateUserDto dto)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.UserId == id);
+            if (user == null) return NotFound();
+            user.Username = dto.Username;
+            user.Email = dto.Email;
+            _context.SaveChanges();
+            return Ok("Profil güncellendi");
+        }
+
+
     }
 }
