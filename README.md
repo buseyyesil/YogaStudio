@@ -98,55 +98,6 @@ API ve UI projeleri birbirinden tamamen bağımsız çalışmakta, **HttpClient*
 
 ---
 
-## 🚀 Kurulum
-
-### Gereksinimler
-- .NET 8 SDK
-- MSSQL Server
-- Visual Studio 2022
-
-### Adımlar
-
-**1. Repoyu klonlayın**
-```bash
-git clone https://github.com/username/YogaStudio.git
-cd YogaStudio
-```
-
-**2. Connection string ayarlayın**
-
-`YogaStudio.API/appsettings.json` dosyasını açın:
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=.;Database=YogaStudioDb;Trusted_Connection=True;TrustServerCertificate=True;"
-  }
-}
-```
-
-**3. Migration çalıştırın**
-
-Package Manager Console'da `YogaStudio.Data` projesini seçin:
-```
-Update-Database
-```
-
-**4. Her iki projeyi birlikte başlatın**
-
-Visual Studio'da çoklu başlatma ayarlayın:
-- `YogaStudio.API` → https://localhost:7276
-- `YogaStudio.UI` → https://localhost:7154
-
-**5. Admin hesabı oluşturun**
-
-SQL Server'da çalıştırın:
-```sql
-INSERT INTO Users (Username, Email, Password, Role)
-VALUES ('admin', 'admin@yogastudio.com', 'Admin123', 'Admin');
-```
-
----
-
 ## 📁 Proje Yapısı
 
 ```
